@@ -1,0 +1,12 @@
+# resources/graphql/types/UserType.graphql
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    password: String!
+    # ... other fields
+    posts: [Post!]!
+    photos: [Photo!]!
+    itineraries: [Itinerary!]!
+}

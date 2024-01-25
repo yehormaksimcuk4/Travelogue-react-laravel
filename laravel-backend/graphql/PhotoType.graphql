@@ -1,0 +1,7 @@
+# resources/graphql/types/PhotoType.graphql
+
+type Photo {
+    id: ID!
+    image_path: String!
+    user: User!
+}

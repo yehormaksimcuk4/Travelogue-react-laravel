@@ -1,0 +1,6 @@
+type Itinerary {
+    id: ID!
+    description: String!
+    user: User!
+    # ... other fields
+}
