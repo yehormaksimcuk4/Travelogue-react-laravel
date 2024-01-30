@@ -57,13 +57,18 @@ const Navbar = () => {
                             </a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#">
-                                Itineraries
+                            <a className="nav-link" href="/itineraryform">
+                                Itinerary
                             </a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#">
-                                Blog
+                            <a className="nav-link" href="/photouploadform">
+                                Photo
+                            </a>
+                        </li>
+                        <li className="nav-item">
+                            <a className="nav-link" href="/postform">
+                                Post
                             </a>
                         </li>
                         {/* <li className="nav-item">

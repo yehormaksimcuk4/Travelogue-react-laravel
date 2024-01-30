@@ -17,6 +17,9 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+            'Nuwave\Lighthouse\Events\BuildExtensions' => [
+                'App\Listeners\RegisterGraphQLExtensions',
+            ],
         ],
     ];
 

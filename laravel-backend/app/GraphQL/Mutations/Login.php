@@ -28,6 +28,7 @@ class Login
             return [
                 'token' => $token,
                 'user' => $user,
+                'user_id' => $user->id,
             ];
         }
 

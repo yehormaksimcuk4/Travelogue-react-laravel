@@ -26,10 +26,11 @@ const Login = () => {
     try {
       const response = await login({ variables: { email, password } });
       if (response.data.login) {
-        const { token } = response.data.login;
+        const { token, user } = response.data.login;
 
         // Store the token in local storage
         localStorage.setItem('token', token);
+        localStorage.setItem('user_id', user.id);
         console.log('Token stored in local storage:', token);
 
         window.location.href = '/';

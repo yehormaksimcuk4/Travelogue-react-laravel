@@ -1,13 +1,12 @@
 # resources/graphql/schema.graphql
 
 scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+scalar Upload
+  @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")
 
 type Query {
-    user(id: ID @eq @rules(apply: ["prohibits:email", "required_without:email"]), email: String @eq @rules(apply: ["prohibits:id", "required_without:id", "email"])): User @find
     users(name: String @where(operator: "like")): [User!]! @paginate(defaultCount: 10)
-    post(id: ID! @eq): Post @find
-    photo(id: ID! @eq): Photo @find
-    itinerary(id: ID! @eq): Itinerary @find
+    user(id: ID @eq @rules(apply: ["prohibits:email", "required_without:email"]), email: String @eq @rules(apply: ["prohibits:id", "required_without:id", "email"])): User @find
 }
 
 type User {
@@ -27,11 +26,14 @@ type Post {
     id: ID!
     content: String!
     user: User! @belongsTo
+    created_at: DateTime!
 }
 
 type Photo {
     id: ID!
     image_path: String!
+    user: User! @belongsTo
+    created_at: DateTime!
     user: User! @belongsTo
 }
 
@@ -39,18 +41,18 @@ type Itinerary {
     id: ID!
     description: String!
     user: User! @belongsTo
+    created_at: DateTime!
 }
 
 extend type Mutation {
     createUser(name: String!, email: String!, password: String!): User @create
     createPost(user_id: ID!, content: String!): Post @create
-    createPhoto(user_id: ID!, image_path: String!): Photo @create
+     createPhoto(user_id: ID!, image_path: Upload!): Photo @create
     createItinerary(user_id: ID!, description: String!): Itinerary @create
     login(email: String!, password: String!): AuthPayload
-      logout: Boolean
-        createPost(user_id: ID!, content: String!): Post @create
+    logout: Boolean
+    createPost(user_id: ID!, content: String!): Post @create
     createItinerary(user_id: ID!, description: String!): Itinerary @create
-    createPhoto(user_id: ID!, image_path: String!): Photo @create
 }
 
 type AuthPayload {

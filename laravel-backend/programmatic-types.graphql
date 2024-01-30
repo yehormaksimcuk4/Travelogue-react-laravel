@@ -28,10 +28,12 @@ scalar Int
 scalar Boolean
 
 type Mutation {
-  createUser(name: String!, email: String!): User
+  createUser(name: String!, email: String!, password: String!): User
   createPost(user_id: ID!, content: String!): Post
-  createPhoto(user_id: ID!, image_path: String!): Photo
+  createPhoto(user_id: ID!, image_path: Upload!): Photo
   createItinerary(user_id: ID!, description: String!): Itinerary
+  login(email: String!, password: String!): AuthPayload
+  logout: Boolean
 }
 
 "Information about pagination using a fully featured paginator."
