@@ -1,17 +1,17 @@
-<?php
+<?php 
+// app/GraphQL/Mutations/CreatePhoto.php
 
-namespace App\GraphQL\Resolvers;
+namespace App\GraphQL\Mutations;
 
 use App\Models\Photo;
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-// use Illuminate\Support\Facades\Log;
 
-
-class PhotoResolver
+class CreatePhoto
 {
-    public function CreatePhoto($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    public function resolve($rootValue, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
         $user_id = $args['user_id'];
         $image = $args['image_path'];
@@ -28,17 +28,16 @@ class PhotoResolver
         return $photo;
     }
 
-    // Function to store the uploaded image with a unique name
-    private function storeImage($user_id, $image)
+    private function storeImage($user_id, UploadedFile $image)
     {
-        // \Log::info('User ID: ' . $user_id);
-        // \Log::info('Image: ' . print_r($image, true));
-    
         $filename = 'photo_' . $user_id . '_' . time() . '.' . $image->getClientOriginalExtension();
-    
-        // Store the image in the public folder
+
+        // Store the image using Laravel's Storage facade
         $image->storeAs('public', $filename);
-    
-        return $filename;
+
+        // Get the public URL for the stored image
+        $imagePath = Storage::url($filename);
+
+        return $imagePath;
     }
 }

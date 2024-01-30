@@ -56,14 +56,14 @@ const Home = () => {
                       </div>
                     </div>
                   ))}
-                  {user.photos.map((photo) => (
-                    <div key={photo.id} className="card mb-3">
-                      <img src={photo.image_path} className="card-img-top" alt={`Photo ${photo.id}`} />
-                      <div className="card-body">
-                        <p className="card-text">Created At: {photo.created_at}</p>
+                    {user.photos.map((photo) => (
+                      <div key={photo.id} className="card mb-3">
+                      <img src={`${photo.image_path}`} className="card-img-top" alt={`Photo ${photo.id}`} />
+                        <div className="card-body">
+                          <p className="card-text">Created At: {photo.created_at}</p>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
                   {user.itineraries.map((itinerary) => (
                     <div key={itinerary.id} className="card mb-3">
                       <div className="card-body">

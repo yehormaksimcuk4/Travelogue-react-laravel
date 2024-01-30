@@ -34,7 +34,6 @@ type Photo {
     image_path: String!
     user: User! @belongsTo
     created_at: DateTime!
-    user: User! @belongsTo
 }
 
 type Itinerary {
@@ -47,7 +46,7 @@ type Itinerary {
 extend type Mutation {
     createUser(name: String!, email: String!, password: String!): User @create
     createPost(user_id: ID!, content: String!): Post @create
-     createPhoto(user_id: ID!, image_path: Upload!): Photo @create
+    createPhoto(user_id: ID!, image_path: Upload!): Photo
     createItinerary(user_id: ID!, description: String!): Itinerary @create
     login(email: String!, password: String!): AuthPayload
     logout: Boolean

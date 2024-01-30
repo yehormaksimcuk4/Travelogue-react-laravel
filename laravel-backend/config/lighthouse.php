@@ -181,11 +181,12 @@ return [
             'photo' => 'App\\GraphQL\\Resolvers\\PhotoResolver@find',
             'itinerary' => 'App\\GraphQL\\Resolvers\\ItineraryResolver@find',
         ],
-        'Mutation' => [
-            'createUser' => 'App\\GraphQL\\Mutations\\UserMutator@create',
-            'createPost' => 'App\\GraphQL\\Mutations\\PostMutator@create',
-            'createPhoto' => 'App\\GraphQL\\Mutations\\PhotoMutator@create',
-            'createItinerary' => 'App\\GraphQL\\Mutations\\ItineraryMutator@create',
+        'Mutations' => [
+            // 'createUser' => 'App\\GraphQL\\Mutations\\UserMutator@create',
+            // 'createPost' => 'App\\GraphQL\\Mutations\\PostMutator@create',
+            // 'createPhoto' => 'App\\GraphQL\\Mutations\\PhotoMutator@create',
+            // 'createItinerary' => 'App\\GraphQL\\Mutations\\ItineraryMutator@create',
+            'createPhoto' => \App\GraphQL\Mutations\CreatePhoto::class,
             'login' => \App\GraphQL\Mutations\Login::class,
         ],
         // Add other resolver mappings as needed

@@ -1,71 +1,56 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useForm } from 'react-hook-form';
 import { useMutation, gql } from '@apollo/client';
 
 const CREATE_PHOTO = gql`
-  mutation CreatePhoto($user_id: ID!, $image: Upload!) {
-    createPhoto(user_id: $user_id, image: $image) {
+  mutation CreatePhoto($user_id: ID!, $image_path: Upload!) {
+    createPhoto(user_id: $user_id, image_path: $image_path) {
       id
       image_path
+      user {
+        id
+        name
+        email
+      }
       created_at
     }
   }
 `;
 
 const PhotoUploadForm = () => {
-  const [image, setImage] = useState(null);
-  const user_id = localStorage.getItem('user_id'); // Assuming user_id is stored in localStorage
+  const { register, handleSubmit } = useForm();
+  const [createPhoto, { loading, error }] = useMutation(CREATE_PHOTO);
 
-  const [createPhoto, { loading, error }] = useMutation(CREATE_PHOTO, {
-    onCompleted: () => {
-      // Handle successful form submission, e.g., show a success message or update the photo list
-      console.log('Photo created successfully!');
-      setImage(null); // Clear the selected image
-    },
-  });
+  const onSubmit = async (data) => {
+    const user_id = "2"; // You can get it from wherever you need (localStorage, state, etc.)
+    const image = data.image[0];
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setImage(file);
-  };
+    try {
+      const { data: { createPhoto: photo } } = await createPhoto({
+        variables: {
+          user_id,
+          image,
+        },
+      });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // Validate the form fields if needed
-
-    // Call the mutation
-    createPhoto({
-      variables: {
-        user_id,
-        image: image,
-      },
-    });
+      console.log('Uploaded Photo:', photo);
+    } catch (error) {
+      console.error('Error uploading photo:', error.message);
+    }
   };
 
   return (
     <div>
       <h2>Upload Photo</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="image" className="form-label">
-            Choose Image
-          </label>
-          <input
-            type="file"
-            id="image"
-            className="form-control"
-            onChange={handleImageChange}
-            accept="image/*"
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary" disabled={loading || !image}>
-          {loading ? 'Uploading...' : 'Upload Photo'}
-        </button>
-        {error && <p className="text-danger mt-3">Error: {error.message}</p>}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <input type="file" {...register('image')} />
+        <button type="submit" disabled={loading}>Upload Photo</button>
       </form>
+      {loading && <p>Loading...</p>}
+      {error && <p>Error: {error.message}</p>}
     </div>
   );
 };
 
 export default PhotoUploadForm;
+  
