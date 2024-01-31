@@ -1,5 +1,4 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
 
 const CREATE_PHOTO = gql`
@@ -18,22 +17,28 @@ const CREATE_PHOTO = gql`
 `;
 
 const PhotoUploadForm = () => {
-  const { register, handleSubmit } = useForm();
+  const [file, setFile] = useState(null);
   const [createPhoto, { loading, error }] = useMutation(CREATE_PHOTO);
 
-  const onSubmit = async (data) => {
-    const user_id = "2"; // You can get it from wherever you need (localStorage, state, etc.)
-    const image = data.image[0];
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    const user_id = localStorage.getItem('user_id');
 
     try {
-      const { data: { createPhoto: photo } } = await createPhoto({
+      const { data } = await createPhoto({
         variables: {
-          user_id,
-          image,
+          user_id: user_id,
+          image_path: file,
         },
       });
 
-      console.log('Uploaded Photo:', photo);
+      console.log('Uploaded Photo:', data.createPhoto);
+      window.location.href = '/'; // Redirect to home page after successful upload
     } catch (error) {
       console.error('Error uploading photo:', error.message);
     }
@@ -42,9 +47,13 @@ const PhotoUploadForm = () => {
   return (
     <div>
       <h2>Upload Photo</h2>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input type="file" {...register('image')} />
-        <button type="submit" disabled={loading}>Upload Photo</button>
+      <form onSubmit={onSubmit} encType="multipart/form-data">
+        <label>
+          Upload Photo:
+          <input type="file" accept="image/*" name="image" onChange={handleFileChange} />
+        </label>
+
+        <button type="submit">Post</button>
       </form>
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error.message}</p>}
@@ -53,4 +62,3 @@ const PhotoUploadForm = () => {
 };
 
 export default PhotoUploadForm;
-  

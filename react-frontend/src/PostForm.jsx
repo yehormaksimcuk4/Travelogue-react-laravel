@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
+import Navbar from './NavBar';
 
 const CREATE_POST = gql`
   mutation CreatePost($user_id: ID!, $content: String!) {
@@ -40,6 +41,8 @@ const PostForm = () => {
 
   return (
     <div>
+      <Navbar />
+      <div className='container p-4'>
       <h2>Create Post</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
@@ -55,11 +58,12 @@ const PostForm = () => {
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary" disabled={loading}>
+        <button type="submit" className="btn btn-danger" disabled={loading}>
           {loading ? 'Creating...' : 'Create Post'}
         </button>
         {error && <p className="text-danger mt-3">Error: {error.message}</p>}
       </form>
+    </div>
     </div>
   );
 };

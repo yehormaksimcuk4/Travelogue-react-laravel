@@ -35,7 +35,7 @@ const Navbar = () => {
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-danger py-4">
             <div className="container-fluid">
-                <a className="navbar-brand" href="#">
+                <a className="navbar-brand" href="/">
                     Travelogue Trips
                 </a>
                 <button
@@ -52,7 +52,7 @@ const Navbar = () => {
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav">
                         <li className="nav-item">
-                            <a className="nav-link" aria-current="page" href="#">
+                            <a className="nav-link" aria-current="page" href="/">
                                 Home
                             </a>
                         </li>
@@ -62,7 +62,7 @@ const Navbar = () => {
                             </a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/photouploadform">
+                            <a className="nav-link" href="/photouploadformrest">
                                 Photo
                             </a>
                         </li>

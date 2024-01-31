@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
+import Navbar from './NavBar';
 
 const CREATE_ITINERARY = gql`
   mutation CreateItinerary($user_id: ID!, $description: String!) {
@@ -40,6 +41,9 @@ const ItineraryForm = () => {
 
   return (
     <div>
+      <Navbar />
+      <div className='contaner p-4'>
+
       <h2>Create Itinerary</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
@@ -55,11 +59,12 @@ const ItineraryForm = () => {
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary" disabled={loading}>
+        <button type="submit" className="btn btn-danger" disabled={loading}>
           {loading ? 'Creating...' : 'Create Itinerary'}
         </button>
         {error && <p className="text-danger mt-3">Error: {error.message}</p>}
       </form>
+    </div>
     </div>
   );
 };

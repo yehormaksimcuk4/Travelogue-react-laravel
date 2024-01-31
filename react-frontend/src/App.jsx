@@ -4,7 +4,8 @@ import Signup from './Register'
 import Home from './Home'
 import ItineraryForm from './ItineraryForm'
 import PostForm from './PostForm'
-import PhotoUploadForm from './PhotoUploadForm'
+// import PhotoUploadForm from './PhotoUploadForm'
+import PhotoUploadFormRest from './PhotoUploadFormRest';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 
@@ -27,7 +28,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/itineraryform" element={<ItineraryForm />} />
             <Route path="/postform" element={<PostForm />} />
-            <Route path="/photouploadform" element={<PhotoUploadForm />} />
+            {/* <Route path="/photouploadform" element={<PhotoUploadForm />} /> */}
+            <Route path="/photouploadformrest" element={<PhotoUploadFormRest />} />
             </Routes>
         }
       </Router>

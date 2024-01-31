@@ -26,15 +26,17 @@ const GET_USER_DATA = gql`
       }
     }
   }
-`;
-
-const Home = () => {
-  const { loading, error, data } = useQuery(GET_USER_DATA);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-
-  const users = data.users.data;
+  `;
+  
+  const Home = () => {
+    const { loading, error, data } = useQuery(GET_USER_DATA);
+    
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error.message}</p>;
+    
+    const users = data.users.data;
+    // console.log('process-env', process.env)
+    const apiUrl = import.meta.env.VITE_API_URL;
 
   return (
     <div>
@@ -58,7 +60,7 @@ const Home = () => {
                   ))}
                     {user.photos.map((photo) => (
                       <div key={photo.id} className="card mb-3">
-                      <img src={`${photo.image_path}`} className="card-img-top" alt={`Photo ${photo.id}`} />
+                      <img src={`${apiUrl}${photo.image_path}`} className="card-img-top" alt={`Photo ${photo.id}`} />
                         <div className="card-body">
                           <p className="card-text">Created At: {photo.created_at}</p>
                         </div>
