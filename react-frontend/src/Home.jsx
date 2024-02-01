@@ -1,6 +1,7 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { useQuery, gql } from '@apollo/client';
 import Navbar from './NavBar';
+import ImageFullScreen from './ImageFullScreen';
 
 // const GET_USER_DATA = gql`
 //   query {
@@ -130,6 +131,7 @@ const GET_PHOTOS = gql`
 `;
 
 const Home = () => {
+  const [fullScreenImage, setFullScreenImage] = useState(null);
   // Fetch itineraries
   const { loading: itinerariesLoading, error: itinerariesError, data: itinerariesData } = useQuery(GET_ITINERARIES);
 
@@ -151,6 +153,10 @@ const Home = () => {
 
   console.log('Sorted data:', sortedData);
 
+  const openFullScreen = (imageUrl) => {
+    setFullScreenImage(imageUrl);
+  };
+
   return (
     <>
       <Navbar />
@@ -163,7 +169,7 @@ const Home = () => {
                 <div key={item.id} className="col">
                   <div className="card shadow-sm">
                     {item.__typename === 'Photo' && item.image_path && (
-                      <img src={`${apiUrl}${item.image_path}`} className="card-img-top p-3" alt={`Thumbnail for ${item.__typename}`} />
+                      <img src={`${apiUrl}${item.image_path}`} className="card-img-top p-5" alt={`Thumbnail for ${item.__typename}`}  onClick={() => openFullScreen(`${apiUrl}${item.image_path}`)}/>
                     )}
                     <div className="card-body" >
                       <h2 className="card-title">{item.__typename}</h2>
@@ -179,6 +185,7 @@ const Home = () => {
             </div>
           </div>
         </div>
+        {fullScreenImage && <ImageFullScreen imageUrl={fullScreenImage} onClose={() => setFullScreenImage(null)} />}
       </div>
     </>
   );
