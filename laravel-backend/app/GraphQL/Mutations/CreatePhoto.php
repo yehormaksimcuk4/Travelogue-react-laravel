@@ -5,14 +5,13 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Photo;
 
-
-final readonly class CreatePhoto
+class CreatePhoto
 {
-    /** @param  array{}  $args */
-    public function __invoke(null $_, array $args)
+    public function __invoke($_, array $args)
     {
         $user_id = $args['user_id'];
-        $image = $args['image_path'];
+        $image = $args['image'];
+        $image_path = $args['image_path'];  // Use the provided image_path
 
         // Validate and store the uploaded image
         $filename = $this->storeImage($user_id, $image);
@@ -20,7 +19,7 @@ final readonly class CreatePhoto
         // Create a new photo record
         $photo = Photo::create([
             'user_id' => $user_id,
-            'image_path' => $filename,
+            'image_path' => $image_path,  // Use the provided image_path
         ]);
 
         return $photo;
@@ -38,4 +37,4 @@ final readonly class CreatePhoto
 
         return $imagePath;
     }
-    }
+}

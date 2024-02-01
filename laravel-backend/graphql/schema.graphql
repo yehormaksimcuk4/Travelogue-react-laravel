@@ -7,6 +7,9 @@ scalar Upload
 type Query {
     users(name: String @where(operator: "like")): [User!]! @paginate(defaultCount: 10)
     user(id: ID @eq @rules(apply: ["prohibits:email", "required_without:email"]), email: String @eq @rules(apply: ["prohibits:id", "required_without:id", "email"])): User @find
+     post: [Post!]! @all 
+    photo: [Photo!]! @all 
+     itinerary: [Itinerary!]! @all
 }
 
 type User {
@@ -43,15 +46,24 @@ type Itinerary {
     created_at: DateTime!
 }
 
+type DeleteResult {
+  success: Boolean!
+  message: String
+}
+
 extend type Mutation {
     createUser(name: String!, email: String!, password: String!): User @create
-    createPost(user_id: ID!, content: String!): Post @create
-    createPhoto(user_id: ID!, image_path: Upload!): Photo
-    createItinerary(user_id: ID!, description: String!): Itinerary @create
+    createPhoto(user_id: ID!, image_path: String, image: Upload!): Photo
     login(email: String!, password: String!): AuthPayload
     logout: Boolean
     createPost(user_id: ID!, content: String!): Post @create
     createItinerary(user_id: ID!, description: String!): Itinerary @create
+      deletePost(id: ID!): DeleteResult
+       deleteItinerary(id: ID!): DeleteResult!
+       deletePhoto(id: ID!): DeleteResult!
+         deleteItinerary(id: ID!): DeleteResult!
+        updatePost(id: ID!, content: String!): Post!
+  updateItinerary(id: ID!, description: String!): Itinerary!
 }
 
 type AuthPayload {

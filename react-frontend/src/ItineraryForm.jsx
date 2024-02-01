@@ -42,7 +42,7 @@ const ItineraryForm = () => {
   return (
     <div>
       <Navbar />
-      <div className='contaner p-4'>
+      <div className='container p-4'>
 
       <h2>Create Itinerary</h2>
       <form onSubmit={handleSubmit}>
@@ -50,10 +50,18 @@ const ItineraryForm = () => {
           <label htmlFor="description" className="form-label">
             Description
           </label>
-          <input
-            type="text"
+          {/* <input
+            type="textarea"
             className="form-control"
             id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+          /> */}
+            <textarea
+            id="description"
+            className="form-control"
+            placeholder="Enter your post content"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required

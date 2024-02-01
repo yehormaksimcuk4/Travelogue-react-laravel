@@ -7,36 +7,38 @@ const LOGOUT_MUTATION = gql`
   }
 `;
 
+const loggedIn = localStorage.getItem('token');
+
 const Navbar = () => {
     const [logout] = useMutation(LOGOUT_MUTATION);
 
     const handleLogout = async () => {
         try {
-          const response = await logout();
-      
-          if (response.data.logout) {
-            // Logout successful
-      
-            // Clear the token from local storage or perform any other cleanup
-            localStorage.removeItem('token');
-      
-            // Redirect to the login page or any other desired page
-            window.location.href = '/login';
-          } else {
-            // Logout failed, handle accordingly
-            console.error('Logout failed');
-          }
+            const response = await logout();
+
+            if (response.data.logout) {
+                // Logout successful
+
+                // Clear the token from local storage or perform any other cleanup
+                localStorage.removeItem('token');
+
+                // Redirect to the login page or any other desired page
+                window.location.href = '/login';
+            } else {
+                // Logout failed, handle accordingly
+                console.error('Logout failed');
+            }
         } catch (error) {
-          console.error(error.message);
+            console.error(error.message);
         }
-      };
+    };
 
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-danger py-4">
             <div className="container-fluid">
-                <a className="navbar-brand" href="/">
-                    Travelogue Trips
+                <a className="navbar-brand" href="/" style={{ fontSize: '3em' }}>
+                    Travelogue
                 </a>
                 <button
                     className="navbar-toggler"
@@ -50,10 +52,15 @@ const Navbar = () => {
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarNav">
-                    <ul className="navbar-nav">
+                    <ul className="navbar-nav ms-auto p-3">
                         <li className="nav-item">
                             <a className="nav-link" aria-current="page" href="/">
                                 Home
+                            </a>
+                        </li>
+                        <li className="nav-item">
+                            <a className="nav-link" aria-current="page" href="/useractivities">
+                                User Activities
                             </a>
                         </li>
                         <li className="nav-item">
@@ -66,6 +73,11 @@ const Navbar = () => {
                                 Photo
                             </a>
                         </li>
+                        {/* <li className="nav-item">
+                            <a className="nav-link" href="/photouploadformgraphql">
+                                Photo GraphQL
+                            </a>
+                        </li> */}
                         <li className="nav-item">
                             <a className="nav-link" href="/postform">
                                 Post
@@ -76,10 +88,25 @@ const Navbar = () => {
                 Disabled
               </a>
             </li> */}
+                    {loggedIn ? (
+                        <>
+                            <div className="ms-auto">
+                                {/* <p style={{color: 'white'}}>Welcome User</p> */}
+                                <div className='btn btn-outline-light' onClick={() => handleLogout()}>Sign out</div>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                             <div className="ms-auto">
+                                   <li className="nav-item">
+                            <a className="nav-link" href="/login">
+                               Sign in
+                            </a>
+                        </li>
+                        </div>
+                        </>
+                    )}
                     </ul>
-                    <div className="ms-auto">
-                        <div className='btn btn-outline-light'onClick={() => handleLogout()}>Sign out</div>
-                    </div>
                 </div>
             </div>
         </nav>

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
 
 const CREATE_PHOTO = gql`
-  mutation CreatePhoto($user_id: ID!, $image_path: Upload!) {
-    createPhoto(user_id: $user_id, image_path: $image_path) {
+  mutation CreatePhoto($user_id: ID!, $image: Upload!) {
+    createPhoto(user_id: $user_id, image: $image) {
       id
       image_path
       user {
@@ -28,17 +28,23 @@ const PhotoUploadForm = () => {
     e.preventDefault();
 
     const user_id = localStorage.getItem('user_id');
+    const filename = `photo_${user_id}_${Date.now()}_${file.name}`;
 
     try {
       const { data } = await createPhoto({
         variables: {
           user_id: user_id,
-          image_path: file,
+          image: file,
+          image_path: filename,
+        },
+        // This is essential to tell Apollo Client to treat 'image' as a File
+        context: {
+          useMultipart: true,
         },
       });
 
       console.log('Uploaded Photo:', data.createPhoto);
-      window.location.href = '/'; // Redirect to home page after successful upload
+      window.location.href = '/'; // Redirect to the home page after a successful upload
     } catch (error) {
       console.error('Error uploading photo:', error.message);
     }

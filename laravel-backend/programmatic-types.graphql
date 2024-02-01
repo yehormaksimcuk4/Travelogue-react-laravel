@@ -34,6 +34,7 @@ type Mutation {
   createItinerary(user_id: ID!, description: String!): Itinerary
   login(email: String!, password: String!): AuthPayload
   logout: Boolean
+  deletePost(id: ID!): DeleteResult
 }
 
 "Information about pagination using a fully featured paginator."

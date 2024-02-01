@@ -1,40 +1,49 @@
-import { useState } from 'react'
-import Login from './Login'
-import Signup from './Register'
-import Home from './Home'
-import ItineraryForm from './ItineraryForm'
-import PostForm from './PostForm'
-// import PhotoUploadForm from './PhotoUploadForm'
+import React from 'react';
+import { Route, Routes, BrowserRouter as Router, Navigate } from 'react-router-dom';
+import Login from './Login';
+import Signup from './Register';
+import Home from './Home';
+import ItineraryForm from './ItineraryForm';
+import PostForm from './PostForm';
 import PhotoUploadFormRest from './PhotoUploadFormRest';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import UserActivities from './UserActivities';
+import { useParams } from 'react-router-dom';
+import UpdatePostFormWrapper from './UpdatePostWrapper';
 
 
 function App() {
-
-  let logged_in = localStorage.getItem('token');
+  const loggedIn = localStorage.getItem('token');
+  const user = localStorage.getItem('user_id');
 
   return (
-    <>
     <Router>
-        {logged_in == null ?
+      <Routes>
+        {/* Public route */}
+        <Route path="/" element={<Home />} />
 
-          <Routes>
-            <Route path="/*" element={<Login />} />
-            <Route path="/register" element={<Signup />} />
-          </Routes>
-          :
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
+        {/* Routes requiring authentication */}
+        {loggedIn ? (
+          <>
+            <Route path="/useractivities" element={<UserActivities userId={user} />} />
             <Route path="/itineraryform" element={<ItineraryForm />} />
             <Route path="/postform" element={<PostForm />} />
-            {/* <Route path="/photouploadform" element={<PhotoUploadForm />} /> */}
             <Route path="/photouploadformrest" element={<PhotoUploadFormRest />} />
-            </Routes>
-        }
-      </Router>
-    </>
-  )
+            <Route path="/updatepost/:postId" element={<UpdatePostFormWrapper />} />
+          </>
+        ) : (
+          <>
+            {/* Unauthenticated routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Signup />} />
+
+            {/* Redirect any unknown routes to login */}
+            <Route path="/*" element={<Navigate to="/login" />} />
+          </>
+        )}
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
+

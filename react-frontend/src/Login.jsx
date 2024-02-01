@@ -46,7 +46,7 @@ const Login = () => {
 
   return (
     <section className="vh-100 d-flex align-items-center justify-content-center bg-danger">
-      <div className="container-fluid">
+      <div className="container-fluid p-5">
         <div className="row d-flex justify-content-center align-items-center">
           <div className="col-md-9 col-lg-6 col-xl-5">
           <h1 className='text-light' style={{fontSize: '3em'}}>Welcome to Travelogue.</h1>

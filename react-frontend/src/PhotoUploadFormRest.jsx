@@ -46,7 +46,7 @@ const UploadImage = () => {
           Choose File:
           <input type="file" accept="image/*" className='form-control' onChange={handleFileChange} />
         </label>
-        <button type="submit" className='btn btn-danger m-1'>Upload</button>
+        <button type="submit" className='btn btn-danger m-1'>Post Photo</button>
       </form>
         </div>
     </div>
