@@ -4,6 +4,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->group(function () {
     // Your GraphQL routes go here
     Route::post('/uploadphotorest', [PhotoController::class, 'uploadPhoto']);
+    Route::post('/profile/update', [ProfileController::class, 'update']);
 });
 
 

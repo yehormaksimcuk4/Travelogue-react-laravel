@@ -41,7 +41,7 @@ const PostForm = () => {
 
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className='container p-4'>
       <h2>Create Post</h2>
       <form onSubmit={handleSubmit}>

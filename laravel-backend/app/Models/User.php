@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Models\Profile;
+
 
 class User extends Authenticatable
 {
@@ -55,5 +58,9 @@ public function photos()
 public function itineraries()
 {
     return $this->hasMany(Itinerary::class);
+}
+public function profile(): HasOne
+{
+    return $this->hasOne(Profile::class);
 }
 }

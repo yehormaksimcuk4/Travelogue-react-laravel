@@ -37,7 +37,7 @@ const UploadImage = () => {
 
   return (
     <div>
-        <Navbar />
+        {/* <Navbar /> */}
         <div className='container py-3'>
 
       <h2>Upload Photo</h2>

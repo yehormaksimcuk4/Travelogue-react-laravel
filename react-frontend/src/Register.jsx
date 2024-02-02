@@ -28,7 +28,7 @@ const Signup = () => {
         try {
             const response = await signup({ variables: { name, email, password } });
             console.log(response.data.createUser); // Access the response data
-            window.location.href = '/';
+            window.location.href = '/login';
         } catch (error) {
             console.error(error.message);
         }

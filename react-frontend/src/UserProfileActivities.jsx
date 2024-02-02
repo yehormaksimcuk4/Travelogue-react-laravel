@@ -7,7 +7,7 @@ import UpdatePostForm from './UpdatePost';
 import UpdateItineraryForm from './UpdateItinerary';
 
 const GET_USER_ACTIVITIES = gql`
-  query GetUserActivities($userId: ID!) {
+  query GetUserActivities($userId: ID) {
     user(id: $userId) {
       id
       name
@@ -30,114 +30,14 @@ const GET_USER_ACTIVITIES = gql`
   }
 `;
 
-const DELETE_POST = gql`
-  mutation DeletePost($postId: ID!) {
-    deletePost(id: $postId) {
-      success
-      message
-    }
-  }
-`;
-const DELETE_ITINERARY = gql`
-  mutation DeleteItinerary($itineraryId: ID!) {
-    deleteItinerary(id: $itineraryId) {
-      success
-      message
-    }
-  }
-`;
-
-const DELETE_PHOTO = gql`
-  mutation DeletePhoto($photoId: ID!) {
-    deletePhoto(id: $photoId) {
-      success
-      message
-    }
-  }
-`;
-
 const userId = localStorage.getItem('user_id');
 console.log('user ID', userId);
 
-const UserActivities = ({ userId }) => {
-  const [editingPostId, setEditingPostId] = useState(null);
-  const [isEditingPost, setIsEditingPost] = useState(false);  
-  const [editingItineraryId, setEditingItineraryId] = useState(null);
-  const [isEditingItinerary, setIsEditingItinerary] = useState(false);
+const UserProfileActivities = ({ userId }) => {
 
-  const { loading, error, data, refetch } = useQuery(GET_USER_ACTIVITIES, {
+  const { loading, error, data} = useQuery(GET_USER_ACTIVITIES, {
     variables: { userId },
   });
-
-  const [deletePost] = useMutation(DELETE_POST);
-
-  const handleDeletePost = async (postId) => {
-    try {
-      await deletePost({
-        variables: { postId },
-      });
-      // Refetch user activities after deletion
-      refetch();
-    //   window.location.href = "/useractivities";
-    // navigate('/useractivities');
-    } catch (error) {
-      console.error('Error deleting post:', error.message);
-    }
-  };
-
-  const [deleteItinerary] = useMutation(DELETE_ITINERARY);
-
-  const handleDeleteItinerary = async (itineraryId) => {
-    try {
-      await deleteItinerary({
-        variables: { itineraryId },
-      });
-
-      // Refetch user activities after deletion
-      refetch();
-    } catch (error) {
-      console.error('Error deleting itinerary:', error.message);
-    }
-  };
-
-  const [deletePhoto] = useMutation(DELETE_PHOTO);
-
-const handleDeletePhoto = async (photoId) => {
-  try {
-    await deletePhoto({
-      variables: { photoId },
-    });
-
-    // Refetch user activities after deletion
-    refetch();
-  } catch (error) {
-    console.error('Error deleting photo:', error.message);
-  }
-};
-
- // State to track if editing post
-
-const handleEditPost = (postId) => {
-  // Set the postId in the state and toggle the editing state
-  setEditingPostId(postId);
-  setIsEditingPost(true);
-};
-
-const handleCancelEdit = () => {
-  // Reset the editing state without triggering a refetch
-  setEditingPostId(null);
-  setIsEditingPost(false);
-};
-
-const handleEditItinerary = (itineraryId) => {
-  setEditingItineraryId(itineraryId);
-  setIsEditingItinerary(true);
-};
-
-const handleCancelEditItinerary = () => {
-  setEditingItineraryId(null);
-  setIsEditingItinerary(false);
-};
 
 
   if (loading) return <p>Loading...</p>;
@@ -166,15 +66,15 @@ const handleCancelEditItinerary = () => {
                     </Link> */}
                      {/* <UpdatePostForm postId={post.id} currentContent={post.content} onClose={refetch} /> */}
                       {/* Conditionally render the UpdatePostForm */}
-                    {isEditingPost && editingPostId === post.id ? (
+                    {/* {isEditingPost && editingPostId === post.id ? (
                       <UpdatePostForm postId={post.id} currentContent={post.content} onClose={handleCancelEdit} />
                     ) : (
                       <button className="btn btn-primary m-2" onClick={() => handleEditPost(post.id)}>
                         Edit
                       </button>
-                    )}
+                    )} */}
                 </div>
-                  <button className="btn btn-danger m-2" onClick={() => handleDeletePost(post.id)}>Delete</button>
+                  {/* <button className="btn btn-danger m-2" onClick={() => handleDeletePost(post.id)}>Delete</button> */}
               </div>
             </div>
           </div>
@@ -188,7 +88,7 @@ const handleCancelEditItinerary = () => {
                 <p className="card-text">Created At: {photo.created_at}</p>
                 <div className="d-flex justify-content-between">
                   {/* <button className="btn btn-primary">Edit</button> */}
-                  <button className="btn btn-danger" onClick={() => handleDeletePhoto(photo.id)}>Delete</button>
+                  {/* <button className="btn btn-danger" onClick={() => handleDeletePhoto(photo.id)}>Delete</button> */}
                 </div>
               </div>
             </div>
@@ -206,15 +106,15 @@ const handleCancelEditItinerary = () => {
                   {/* <Link to={`/updatepost/${post.id}`} className="btn btn-primary">
                       Edit
                     </Link> */}
-                        {isEditingItinerary && editingItineraryId === itinerary.id ? (
+                        {/* {isEditingItinerary && editingItineraryId === itinerary.id ? (
                       <UpdateItineraryForm itineraryId={itinerary.id} currentDescription={itinerary.description} onClose={handleCancelEditItinerary} />
                     ) : (
                       <button className="btn btn-primary m-2" onClick={() => handleEditItinerary(itinerary.id)}>
                         Edit
                       </button>
-                    )}
+                    )} */}
                 </div>
-                  <button className="btn btn-danger m-2"onClick={() => handleDeleteItinerary(itinerary.id)}>Delete</button>
+                  {/* <button className="btn btn-danger m-2"onClick={() => handleDeleteItinerary(itinerary.id)}>Delete</button> */}
               </div>
             </div>
           </div>
@@ -225,4 +125,4 @@ const handleCancelEditItinerary = () => {
   );
 };
 
-export default UserActivities;
+export default UserProfileActivities;

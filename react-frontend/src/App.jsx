@@ -9,6 +9,10 @@ import PhotoUploadFormRest from './PhotoUploadFormRest';
 import UserActivities from './UserActivities';
 import { useParams } from 'react-router-dom';
 import UpdatePostFormWrapper from './UpdatePostWrapper';
+import Profile from './Profile';
+import UserProfile from './UserProfile';
+import Navbar from './NavBar';
+import UserProfileActivities from './UserProfileActivities';
 
 
 function App() {
@@ -17,6 +21,8 @@ function App() {
 
   return (
     <Router>
+       <div>
+        <Navbar />
       <Routes>
         {/* Public route */}
         <Route path="/" element={<Home />} />
@@ -29,6 +35,8 @@ function App() {
             <Route path="/postform" element={<PostForm />} />
             <Route path="/photouploadformrest" element={<PhotoUploadFormRest />} />
             <Route path="/updatepost/:postId" element={<UpdatePostFormWrapper />} />
+            <Route path="/profileupdate" element={<Profile />} />
+            <Route path="/profile" element={<UserProfile />} />
           </>
         ) : (
           <>
@@ -41,6 +49,7 @@ function App() {
           </>
         )}
       </Routes>
+      </div>
     </Router>
   );
 }

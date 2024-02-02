@@ -159,7 +159,7 @@ const Home = () => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="container">
         <div className="album py-5 bg-light mt-3">
           <div className="container">
