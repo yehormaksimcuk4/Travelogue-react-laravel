@@ -63,4 +63,8 @@ public function profile(): HasOne
 {
     return $this->hasOne(Profile::class);
 }
+public function savedItems()
+{
+    return $this->hasMany(SavedItem::class);
+}
 }

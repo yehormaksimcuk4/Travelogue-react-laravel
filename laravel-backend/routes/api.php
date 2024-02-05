@@ -29,6 +29,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/profile/update', [ProfileController::class, 'update']);
 });
 
+Route::post('/graphql', function (\Illuminate\Http\Request $request) {
+    return app('graphql')->executeQuery(
+        $request->input('query'),
+        $request->input('variables', []),
+        $request->input('operationName')
+    );
+});
 
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);

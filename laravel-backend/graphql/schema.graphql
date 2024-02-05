@@ -11,6 +11,8 @@ type Query {
     photo: [Photo!]! @all 
      itinerary: [Itinerary!]! @all
   profile: Profile @find
+       savedItems: [SavedItem!]!
+    me: User!
 }
 
 type User {
@@ -25,6 +27,7 @@ type User {
     posts: [Post!]! @hasMany
     photos: [Photo!]! @hasMany
     itineraries: [Itinerary!]! @hasMany
+      savedItems: [SavedItem!]! @hasMany
 }
 
 type Profile {
@@ -60,6 +63,20 @@ type DeleteResult {
   message: String
 }
 
+type SavedItem {
+  id: ID!
+  author_id: ID
+  user_id: ID
+  image_path: String
+  created_at: String
+  user: User! @belongsTo
+    post: Post
+  itinerary: Itinerary
+  photo: Photo
+}
+
+
+
 extend type Mutation {
     createUser(name: String!, email: String!, password: String!): User @create
     createPhoto(user_id: ID!, image_path: String, image: Upload!): Photo
@@ -73,6 +90,7 @@ extend type Mutation {
          deleteItinerary(id: ID!): DeleteResult!
         updatePost(id: ID!, content: String!): Post!
   updateItinerary(id: ID!, description: String!): Itinerary!
+   saveItem(itemId: ID!): SavedItem!
 }
 
 type AuthPayload {

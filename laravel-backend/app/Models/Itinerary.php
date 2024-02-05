@@ -14,4 +14,8 @@ class Itinerary extends Model
 {
     return $this->belongsTo(User::class);
 }
+public function itinerary($savedItem)
+{
+    return $savedItem->itinerary;
+}
 }

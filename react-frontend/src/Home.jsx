@@ -1,5 +1,5 @@
-import React,{useState} from 'react';
-import { useQuery, gql } from '@apollo/client';
+import React, { useState } from 'react';
+import { useQuery, gql, useMutation } from '@apollo/client';
 import Navbar from './NavBar';
 import ImageFullScreen from './ImageFullScreen';
 
@@ -28,16 +28,16 @@ import ImageFullScreen from './ImageFullScreen';
 //     }
 //   }
 //   `;
-  
+
 //   const Home = () => {
 //     const { loading, error, data } = useQuery(GET_USER_DATA);
-    
+
 //     if (loading) return <p>Loading...</p>;
 //     if (error) return <p>Error: {error.message}</p>;
-    
+
 //     const users = data.users.data;
 //     // console.log('process-env', process.env)
-    const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_API_URL;
 
 //   return (
 //     <div>
@@ -130,6 +130,18 @@ const GET_PHOTOS = gql`
   }
 `;
 
+export const SAVE_ITEM_MUTATION = gql`
+  mutation SaveItem($itemId: ID!) {
+    saveItem(itemId: $itemId) {
+      id
+      author_id
+      user_id
+      image_path
+      created_at
+    }
+  }
+`;
+
 const Home = () => {
   const [fullScreenImage, setFullScreenImage] = useState(null);
   // Fetch itineraries
@@ -141,6 +153,8 @@ const Home = () => {
   // Fetch photos
   const { loading: photosLoading, error: photosError, data: photosData } = useQuery(GET_PHOTOS);
 
+  const [saveItem] = useMutation(SAVE_ITEM_MUTATION);
+
   // Combine data from itineraries, posts, and photos
   const combinedData = [
     ...(itinerariesData?.itinerary || []),
@@ -151,7 +165,27 @@ const Home = () => {
   // Sort combinedData by created_at in descending order
   const sortedData = combinedData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-  console.log('Sorted data:', sortedData);
+  const Token = localStorage.getItem('token');
+
+
+
+  const handleSaveItem = (itemId) => {
+    const yourAccessToken = localStorage.getItem('token');
+  
+    saveItem({
+      variables: {
+        itemId
+      },
+      context: {
+        headers: {
+          Authorization: `Bearer ${Token}`,
+        },
+      },
+      // You can add an update function to update the cache if needed
+    });
+  };
+
+  // console.log('Sorted data:', sortedData);
 
   const openFullScreen = (imageUrl) => {
     setFullScreenImage(imageUrl);
@@ -169,7 +203,7 @@ const Home = () => {
                 <div key={item.id} className="col">
                   <div className="card shadow-sm">
                     {item.__typename === 'Photo' && item.image_path && (
-                      <img src={`${apiUrl}${item.image_path}`} className="card-img-top p-5" alt={`Thumbnail for ${item.__typename}`}  onClick={() => openFullScreen(`${apiUrl}${item.image_path}`)}/>
+                      <img src={`${apiUrl}${item.image_path}`} className="card-img-top p-5" alt={`Thumbnail for ${item.__typename}`} onClick={() => openFullScreen(`${apiUrl}${item.image_path}`)} />
                     )}
                     <div className="card-body" >
                       <h2 className="card-title">{item.__typename}</h2>
@@ -178,6 +212,7 @@ const Home = () => {
                       {item.__typename === 'Itinerary' && <p className="card-text">{item?.description}</p>}
                       <p className="card-text">Created At: {item?.created_at}</p>
                       {/* Add other content or buttons as needed */}
+                      <button onClick={() => handleSaveItem(item.id)}>Save This</button>
                     </div>
                   </div>
                 </div>

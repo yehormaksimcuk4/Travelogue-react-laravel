@@ -15,4 +15,8 @@ class Photo extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function photo($savedItem)
+{
+    return $savedItem->photo;
+}
 }

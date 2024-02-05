@@ -83,6 +83,11 @@ const Navbar = () => {
                                 Post
                             </a>
                         </li>
+                        <li className="nav-item">
+                            <a className="nav-link" href="/mysaved">
+                               My Saved
+                            </a>
+                        </li>
                         {/* <li className="nav-item">
               <a className="nav-link disabled" href="#" tabIndex="-1" aria-disabled="true">
                 Disabled
