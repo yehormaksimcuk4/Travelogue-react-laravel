@@ -4,6 +4,10 @@ Travelogue is an exciting travel platform currently in its initial phase of deve
 
 ![Example Screenshot](travelogue-login-1.jpg)
 
+![Example Screenshot](travelogue-profile-1.jpg)
+
+![Example Screenshot](travelogue-activities-1.jpg)
+
 
 ### Backend Technologies:
 
