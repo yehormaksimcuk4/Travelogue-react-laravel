@@ -55,34 +55,41 @@ const SavedList = () => {
               <div key={item.id} className="col">
                 <div className="card shadow-sm">
                   <div className="card-body">
-                    {/* <h2 className="card-title">{item.user ? item.user.name : 'Unknown User'}</h2> */}
                     <h2 className="card-title">{user.name}</h2>
-                    {/* <p className="card-text m-0">User ID: {item.user ? item.user.id : 'Unknown ID'}</p> */}
                   </div>
-
+  
+                  <div className="card-body">
+                    <h3>Saved Item Details</h3>
+                    
+                      <p>ID: {item.id}</p>
+                      <p>Author ID: {item.author_id}</p>
+                      {/* <li>User ID: {item.user_id}</li> */}
+                      <img src={`${apiUrl}${item.image_path}`} className="card-img-top p-5" alt={`Photo`} />
+                      <p>Created At: {item.created_at}</p>
+                    
+                  </div>
+  
+                  {item.post && (
                     <div className="card-body">
-                      <h3>Posts</h3>
-                      
-                          <p>{item?.post?.content}</p>
-                      
+                      <h3>Post</h3>
+                      <p>{item.post.content}</p>
                     </div>
-
-                    <div className="card-body">
-                      <h3>Itineraries</h3>
-                      
-                          <p>{item?.itinerary?.description}</p>
-                      
-                    </div>
-
-                    <div className="card-body">
-                      <h3>Photos</h3>
-                      {item.photo ? (
-                    <img src={`${apiUrl}${item.photo.image_path}`} alt={`Photo`} />
-                  ) : (
-                    <p>No photo available</p>
                   )}
+  
+                  {item.itinerary && (
+                    <div className="card-body">
+                      <h3>Itinerary</h3>
+                      <p>{item.itinerary.description}</p>
                     </div>
-
+                  )}
+  
+                  {item.photo && (
+                    <div className="card-body">
+                      <h3>Photo</h3>
+                      <img src={`${apiUrl}${item.photo.image_path}`} alt={`Photo`} />
+                    </div>
+                  )}
+  
                 </div>
               </div>
             ))}

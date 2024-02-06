@@ -144,6 +144,7 @@ export const SAVE_ITEM_MUTATION = gql`
 
 const Home = () => {
   const [fullScreenImage, setFullScreenImage] = useState(null);
+  const [savedItems, setSavedItems] = useState([]);
   // Fetch itineraries
   const { loading: itinerariesLoading, error: itinerariesError, data: itinerariesData } = useQuery(GET_ITINERARIES);
 
@@ -183,6 +184,7 @@ const Home = () => {
       },
       // You can add an update function to update the cache if needed
     });
+    setSavedItems((prevItems) => [...prevItems, itemId]);
   };
 
   // console.log('Sorted data:', sortedData);
@@ -211,8 +213,18 @@ const Home = () => {
                       {item.__typename === 'Post' && <p className="card-text">{item?.content}</p>}
                       {item.__typename === 'Itinerary' && <p className="card-text">{item?.description}</p>}
                       <p className="card-text">Created At: {item?.created_at}</p>
-                      {/* Add other content or buttons as needed */}
-                      <button onClick={() => handleSaveItem(item.id)}>Save This</button>
+                      {/* Add other content or buttons as needed
+
+                      <button className='btn btn-danger' onClick={() => handleSaveItem(item.id)}>Save This</button> */}
+                          {item.__typename === 'Photo' && (
+                <button
+                  className={`btn ${savedItems.includes(item.id) ? 'btn-secondary' : 'btn-danger'}`}
+                  onClick={() => handleSaveItem(item.id)}
+                  disabled={savedItems.includes(item.id)}
+                >
+                  {savedItems.includes(item.id) ? 'Saved' : 'Save This'}
+                </button>
+              )}
                     </div>
                   </div>
                 </div>
