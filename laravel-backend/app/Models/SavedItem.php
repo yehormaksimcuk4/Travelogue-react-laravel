@@ -44,4 +44,5 @@ class SavedItem extends Model
     {
         return $this->belongsTo(Photo::class);
     }
+    
 }

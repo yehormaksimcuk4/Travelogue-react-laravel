@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import Navbar from './NavBar';
 import ImageFullScreen from './ImageFullScreen';
+import { Link } from 'react-router-dom';
 
 // const GET_USER_DATA = gql`
 //   query {
@@ -209,7 +210,14 @@ const Home = () => {
                     )}
                     <div className="card-body" >
                       <h2 className="card-title">{item.__typename}</h2>
-                      <p className="card-text m-0">from {item?.user?.name}</p>
+                      {/* <p className="card-text m-0">from {item?.user?.name}</p> */}
+                      <p className="card-text m-0">
+                        from{' '}
+                        <Link to={`/user/${item?.user?.id}`} className="text-danger">
+                          {item?.user?.name}
+                        </Link>
+                      </p>
+
                       {item.__typename === 'Post' && <p className="card-text">{item?.content}</p>}
                       {item.__typename === 'Itinerary' && <p className="card-text">{item?.description}</p>}
                       <p className="card-text">Created At: {item?.created_at}</p>

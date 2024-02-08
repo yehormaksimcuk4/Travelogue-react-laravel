@@ -14,6 +14,7 @@ import UserProfile from './UserProfile';
 import Navbar from './NavBar';
 import UserProfileActivities from './UserProfileActivities';
 import SavedList from './DisplaySavedItems';
+import AuthenticatedUserProfile from './AuthenticatedUserProfile';
 
 
 function App() {
@@ -37,7 +38,8 @@ function App() {
             <Route path="/photouploadformrest" element={<PhotoUploadFormRest />} />
             <Route path="/updatepost/:postId" element={<UpdatePostFormWrapper />} />
             <Route path="/profileupdate" element={<Profile />} />
-            <Route path="/profile" element={<UserProfile />} />
+            <Route path="/profile" element={<AuthenticatedUserProfile />} />
+            <Route path="/user/:userId" element={<UserProfile />} />
             <Route path="/mysaved" element={<SavedList />} />
           </>
         ) : (

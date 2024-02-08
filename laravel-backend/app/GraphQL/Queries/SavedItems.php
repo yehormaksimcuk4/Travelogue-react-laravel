@@ -14,6 +14,16 @@ class SavedItems
 {
     public function resolve($root, $args, $context, $resolveInfo, $getSelectFields)
     {
-        return SavedItem::all(); // Adjust this according to your logic to fetch saved items
+        $user = auth('sanctum')->user();
+
+        if (!$user) {
+            // Handle unauthenticated user, either return null or throw an exception
+            return null;
+        }
+
+        return SavedItem::with(['author', 'user'])->get();
     }
+    // {
+    //     return SavedItem::with('author')->get();
+    // }
 }

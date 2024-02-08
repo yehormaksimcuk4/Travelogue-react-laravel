@@ -23,7 +23,7 @@ query GetUserProfile($userId: ID!) {
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-const UserProfile = () => {
+const AuthenticatedUserProfile = () => {
 
     const { userId } = useParams();
 
@@ -31,7 +31,7 @@ const UserProfile = () => {
 
 
     const { loading, error, data } = useQuery(GET_USER_PROFILE, {
-        variables: { userId: userId },
+        variables: { userId: loggedInUserId },
     });
 
     useEffect(() => {
@@ -88,4 +88,4 @@ const UserProfile = () => {
     );
 };
 
-export default UserProfile;
+export default AuthenticatedUserProfile;
