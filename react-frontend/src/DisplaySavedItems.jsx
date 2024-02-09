@@ -1,5 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
+import { Link } from 'react-router-dom';
+import ImageFullScreen from './ImageFullScreen';
+
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -42,6 +45,8 @@ const GET_USER = gql`
 `;
 
 const SavedList = () => {
+  const [fullScreenImage, setFullScreenImage] = useState(null);
+
   const { loading, error, data } = useQuery(GET_MY_SAVED_ITEMS);
 
   useEffect(() => {
@@ -56,6 +61,7 @@ const SavedList = () => {
   if (!user) {
     return <p>User not authenticated.</p>;
   }
+
 
   console.log(user);
 
@@ -75,10 +81,17 @@ const SavedList = () => {
 };
 
 const SavedItem = ({ item, user }) => {
+  const [fullScreenImage, setFullScreenImage] = useState(null);
+
   const { loading: userLoading, error: userError, data: userData } = useQuery(GET_USER, {
     variables: { authorId: item.author_id },
     fetchPolicy: 'cache-and-network',
   });
+
+  
+  const openFullScreen = (imageUrl) => {
+    setFullScreenImage(imageUrl);
+  };
 
   const author = userData?.user;
 
@@ -91,10 +104,13 @@ const SavedItem = ({ item, user }) => {
 
         <div className="card-body">
           <h3>Saved Item Details</h3>
-          <p>ID: {item.id}</p>
-          <p>Author ID: {item.author_id}</p>
-          <p>Author: {author ? author.name : 'Unknown Author'}</p>
-          <img src={`${apiUrl}${item.image_path}`} className="card-img-top p-5" alt={`Photo`} />
+          {/* <p>ID: {item.id}</p> */}
+          {/* <p>Author ID: {item.author_id}</p> */}
+          {/* <p>Author: {author ? author.name : 'Unknown Author'}</p> */}
+          <Link to={`/user/${item.author_id}`} className="text-danger">
+            <p>Author: {author ? author.name : 'Unknown Author'}</p>
+          </Link>
+          <img src={`${apiUrl}${item.image_path}`} className="card-img-top p-5" alt={`Photo`}  onClick={() => openFullScreen(`${apiUrl}${item.image_path}`)} />
           <p>Created At: {item.created_at}</p>
         </div>
 
@@ -119,6 +135,7 @@ const SavedItem = ({ item, user }) => {
           </div>
         )}
       </div>
+      {fullScreenImage && <ImageFullScreen imageUrl={fullScreenImage} onClose={() => setFullScreenImage(null)} />}
     </div>
   );
 };

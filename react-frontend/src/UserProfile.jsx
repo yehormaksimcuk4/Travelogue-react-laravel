@@ -7,6 +7,7 @@ import Navbar from './NavBar';
 import UserProfileActivities from './UserProfileActivities';
 import Profile from './Profile';
 import { useParams } from 'react-router-dom';
+import ImageFullScreen from './ImageFullScreen';
 
 const GET_USER_PROFILE = gql`
 query GetUserProfile($userId: ID!) {
@@ -24,6 +25,10 @@ query GetUserProfile($userId: ID!) {
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const UserProfile = () => {
+    const [fullScreenImage, setFullScreenImage] = useState(null);
+    const [savedItems, setSavedItems] = useState([]);
+
+
 
     const { userId } = useParams();
 
@@ -56,6 +61,28 @@ const UserProfile = () => {
 
     const isOwnProfile = loggedInUserId === user.id;
 
+    const openFullScreen = (imageUrl) => {
+        setFullScreenImage(imageUrl);
+      };
+
+      
+  const handleSaveItem = (itemId) => {
+    const yourAccessToken = localStorage.getItem('token');
+  
+    saveItem({
+      variables: {
+        itemId
+      },
+      context: {
+        headers: {
+          Authorization: `Bearer ${Token}`,
+        },
+      },
+      // You can add an update function to update the cache if needed
+    });
+    setSavedItems((prevItems) => [...prevItems, itemId]);
+  };
+
     return (
         <>
             {/* <Navbar /> */}
@@ -67,6 +94,7 @@ const UserProfile = () => {
                                 src={`${apiUrl}/${profilePicPath}`}
                                 style={{ width: 'auto', height: '100%', maxHeight: '200px', borderRadius: '50%' }}
                                 alt="Profile"
+                                onClick={() => openFullScreen(`${apiUrl}${item.image_path}`)}
                             />
                         </div>
                         <h2 className="text-center mt-3">User Profile</h2>
@@ -82,6 +110,7 @@ const UserProfile = () => {
                         </div>
                     </div>
                 </div>
+                {fullScreenImage && <ImageFullScreen imageUrl={fullScreenImage} onClose={() => setFullScreenImage(null)} />}
                 <UserProfileActivities userId={user.id} />
             </div>
         </>

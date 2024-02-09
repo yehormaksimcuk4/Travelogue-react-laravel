@@ -5,6 +5,8 @@ import Navbar from './NavBar';
 import { Link, useNavigate } from 'react-router-dom';
 import UpdatePostForm from './UpdatePost';
 import UpdateItineraryForm from './UpdateItinerary';
+import ImageFullScreen from './ImageFullScreen';
+
 
 const GET_USER_ACTIVITIES = gql`
   query GetUserActivities($userId: ID) {
@@ -30,10 +32,27 @@ const GET_USER_ACTIVITIES = gql`
   }
 `;
 
+export const SAVE_ITEM_MUTATION = gql`
+  mutation SaveItem($itemId: ID!) {
+    saveItem(itemId: $itemId) {
+      id
+      author_id
+      user_id
+      image_path
+      created_at
+    }
+  }
+`;
+
+
 const userId = localStorage.getItem('user_id');
 console.log('user ID', userId);
 
 const UserProfileActivities = ({ userId }) => {
+  const [fullScreenImage, setFullScreenImage] = useState(null);
+  const [savedItems, setSavedItems] = useState([]);
+
+  const [saveItem] = useMutation(SAVE_ITEM_MUTATION);
 
   const { loading, error, data} = useQuery(GET_USER_ACTIVITIES, {
     variables: { userId },
@@ -46,9 +65,31 @@ const UserProfileActivities = ({ userId }) => {
   const user = data.user;
   const apiUrl = import.meta.env.VITE_API_URL;
 
+  const openFullScreen = (imageUrl) => {
+    setFullScreenImage(imageUrl);
+  };
+
+  const handleSaveItem = (itemId) => {
+    const yourAccessToken = localStorage.getItem('token');
+    const Token = localStorage.getItem('token');
+
+  
+    saveItem({
+      variables: {
+        itemId
+      },
+      context: {
+        headers: {
+          Authorization: `Bearer ${Token}`,
+        },
+      },
+      // You can add an update function to update the cache if needed
+    });
+    setSavedItems((prevItems) => [...prevItems, itemId]);
+  };
+
   return (
     <div>
-        {/* <Navbar /> */}
         <div className='container py-4'>
       <h2>{user.name}'s Activities</h2>
       <div className="row row-cols-1 row-cols-sm-3 g-4 p-4">
@@ -60,21 +101,8 @@ const UserProfileActivities = ({ userId }) => {
                 <p className="card-text">{post.content}</p>
                 <p className="card-text">Created At: {post.created_at}</p>
                 <div className="d-flex justify-content-between">
-                  {/* <button className="btn btn-primary">Edit</button> */}
-                  {/* <Link to={`/updatepost/${post.id}`} className="btn btn-primary">
-                      Edit
-                    </Link> */}
-                     {/* <UpdatePostForm postId={post.id} currentContent={post.content} onClose={refetch} /> */}
-                      {/* Conditionally render the UpdatePostForm */}
-                    {/* {isEditingPost && editingPostId === post.id ? (
-                      <UpdatePostForm postId={post.id} currentContent={post.content} onClose={handleCancelEdit} />
-                    ) : (
-                      <button className="btn btn-primary m-2" onClick={() => handleEditPost(post.id)}>
-                        Edit
-                      </button>
-                    )} */}
+                
                 </div>
-                  {/* <button className="btn btn-danger m-2" onClick={() => handleDeletePost(post.id)}>Delete</button> */}
               </div>
             </div>
           </div>
@@ -84,12 +112,19 @@ const UserProfileActivities = ({ userId }) => {
             <div className="card shadow">
               <div className="card-body">
                 <h5 className="card-title">Photo</h5>
-                <img src={`${apiUrl}${photo.image_path}`} className="card-img-top" alt={`Photo ${photo.id}`} />
+                <img src={`${apiUrl}${photo.image_path}`} className="card-img-top" alt={`Photo ${photo.id}`} onClick={() => openFullScreen(`${apiUrl}${photo.image_path}`)} />
                 <p className="card-text">Created At: {photo.created_at}</p>
                 <div className="d-flex justify-content-between">
-                  {/* <button className="btn btn-primary">Edit</button> */}
-                  {/* <button className="btn btn-danger" onClick={() => handleDeletePhoto(photo.id)}>Delete</button> */}
                 </div>
+                {/* {item.__typename === 'Photo' && ( */}
+                <button
+                  className={`btn ${savedItems.includes(photo.id) ? 'btn-secondary' : 'btn-danger'}`}
+                  onClick={() => handleSaveItem(photo.id)}
+                  disabled={savedItems.includes(photo.id)}
+                >
+                  {savedItems.includes(photo.id) ? 'Saved' : 'Save This'}
+                </button>
+              
               </div>
             </div>
           </div>
@@ -102,24 +137,14 @@ const UserProfileActivities = ({ userId }) => {
                 <p className="card-text">{itinerary.description}</p>
                 <p className="card-text">Created At: {itinerary.created_at}</p>
                 <div className="d-flex justify-content-between">
-                  {/* <button className="btn btn-primary">Edit</button> */}
-                  {/* <Link to={`/updatepost/${post.id}`} className="btn btn-primary">
-                      Edit
-                    </Link> */}
-                        {/* {isEditingItinerary && editingItineraryId === itinerary.id ? (
-                      <UpdateItineraryForm itineraryId={itinerary.id} currentDescription={itinerary.description} onClose={handleCancelEditItinerary} />
-                    ) : (
-                      <button className="btn btn-primary m-2" onClick={() => handleEditItinerary(itinerary.id)}>
-                        Edit
-                      </button>
-                    )} */}
+            
                 </div>
-                  {/* <button className="btn btn-danger m-2"onClick={() => handleDeleteItinerary(itinerary.id)}>Delete</button> */}
               </div>
             </div>
           </div>
         ))}
       </div>
+      {fullScreenImage && <ImageFullScreen imageUrl={fullScreenImage} onClose={() => setFullScreenImage(null)} />}
     </div>
     </div>
   );
