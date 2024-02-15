@@ -181,6 +181,7 @@ return [
             'photo' => 'App\\GraphQL\\Resolvers\\PhotoResolver@find',
             'itinerary' => 'App\\GraphQL\\Resolvers\\ItineraryResolver@find',
             'savedItems' => \App\GraphQL\Queries\MySavedItems::class,
+            'collections' => \App\GraphQL\Queries\Collections::class,
         ],
         'Mutations' => [
             // 'createUser' => 'App\\GraphQL\\Mutations\\UserMutator@create',
@@ -190,6 +191,8 @@ return [
             'saveItem' => 'App\\GraphQL\\Resolvers\\ItemResolver@saveItem',
             'createPhoto' => \App\GraphQL\Mutations\CreatePhoto::class,
             'login' => \App\GraphQL\Mutations\Login::class,
+            'createCollection' => \App\GraphQL\Mutations\CreateCollection::class,
+            'addToCollection' => \App\GraphQL\Mutations\AddToCollection::class,
         ],
         // Add other resolver mappings as needed
     ],

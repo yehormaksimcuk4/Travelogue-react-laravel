@@ -15,6 +15,8 @@ import Navbar from './NavBar';
 import UserProfileActivities from './UserProfileActivities';
 import SavedList from './DisplaySavedItems';
 import AuthenticatedUserProfile from './AuthenticatedUserProfile';
+import UserCollections from './DisplayCollections';
+import SavedCollectionList from './SavedCollectionList';
 
 
 function App() {
@@ -41,6 +43,8 @@ function App() {
             <Route path="/profile" element={<AuthenticatedUserProfile />} />
             <Route path="/user/:userId" element={<UserProfile />} />
             <Route path="/mysaved" element={<SavedList />} />
+            <Route path="/usercollections" element={<UserCollections />} />
+            <Route path="/collections/:collectionId" element={<SavedCollectionList />} />
           </>
         ) : (
           <>

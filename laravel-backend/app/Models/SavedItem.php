@@ -12,6 +12,7 @@ class SavedItem extends Model
         'author_id',
         'user_id',
         'image_path',
+        'collection_id',
         // Add other fillable fields as needed
     ];
 
@@ -43,6 +44,10 @@ class SavedItem extends Model
     public function photo()
     {
         return $this->belongsTo(Photo::class);
+    }
+    public function collection()
+    {
+        return $this->belongsTo(Collection::class);
     }
     
 }

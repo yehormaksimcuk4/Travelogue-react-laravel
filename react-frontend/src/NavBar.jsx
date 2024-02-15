@@ -21,6 +21,7 @@ const Navbar = () => {
 
                 // Clear the token from local storage or perform any other cleanup
                 localStorage.removeItem('token');
+                localStorage.removeItem('user_id');
 
                 // Redirect to the login page or any other desired page
                 window.location.href = '/login';
@@ -83,9 +84,14 @@ const Navbar = () => {
                                 Post
                             </a>
                         </li>
-                        <li className="nav-item">
+                        {/* <li className="nav-item">
                             <a className="nav-link" href="/mysaved">
                                My Saved
+                            </a>
+                        </li> */}
+                        <li className="nav-item">
+                            <a className="nav-link" href="/usercollections">
+                             My Collections
                             </a>
                         </li>
                         {/* <li className="nav-item">

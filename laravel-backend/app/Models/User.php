@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Models\Profile;
+use App\Models\Collection;
 
 
 class User extends Authenticatable
@@ -66,5 +67,9 @@ public function profile(): HasOne
 public function savedItems()
 {
     return $this->hasMany(SavedItem::class);
+}
+public function collections()
+{
+    return $this->hasMany(Collection::class);
 }
 }

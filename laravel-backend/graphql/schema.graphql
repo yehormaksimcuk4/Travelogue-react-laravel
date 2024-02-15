@@ -13,6 +13,9 @@ type Query {
   profile: Profile @find
        savedItems: [SavedItem!]!
     me: User!
+      collectionss(user_id: ID!): [Collection!]! @all
+        collections(id: ID!): Collection @find
+        savedCollectionItems(id: ID!): [SavedItem!]! @field(resolver: "App\\GraphQL\\Queries\\SavedCollectionItems@resolve")
 }
 
 type User {
@@ -28,6 +31,7 @@ type User {
     photos: [Photo!]! @hasMany
     itineraries: [Itinerary!]! @hasMany
       savedItems: [SavedItem!]! @hasMany
+       collections: [Collection!]! @hasMany
 }
 
 type Profile {
@@ -72,9 +76,18 @@ type SavedItem {
   user: User! @belongsTo
     post: Post
   itinerary: Itinerary
-  photo: Photo
+  photo: Photo @belongsTo
+   collection: Collection @belongsTo
 }
 
+type Collection {
+    id: ID!
+    user_id: ID!
+    name: String!
+    user: User! @belongsTo
+    created_at: DateTime!
+    savedItems: [SavedItem!]! @hasMany
+}
 
 
 extend type Mutation {
@@ -91,6 +104,8 @@ extend type Mutation {
         updatePost(id: ID!, content: String!): Post!
   updateItinerary(id: ID!, description: String!): Itinerary!
    saveItem(itemId: ID!): SavedItem!
+       createCollection(name: String! user_id: ID!): Collection @create
+            addToCollection(photoId: ID!, collectionId: ID!): SavedItem!
 }
 
 type AuthPayload {

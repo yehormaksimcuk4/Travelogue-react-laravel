@@ -19,4 +19,8 @@ class Photo extends Model
 {
     return $savedItem->photo;
 }
+public function collection()
+{
+    return $this->belongsTo(Collection::class);
+}
 }
