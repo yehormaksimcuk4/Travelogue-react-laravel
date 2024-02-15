@@ -46,12 +46,12 @@ const UserCollectionItem = ({ collection }) => {
 
   return (
     <div key={collection.id} className="col">
-      <div className="card shadow-sm">
-        {thumbnailImage ? (
+      <div className="card shadow-sm p-3">
+        {/* {thumbnailImage ? (
           <img src={`${thumbnailImage}`} className="card-img-top p-5" alt={`Thumbnail`} />
         ) : (
           <div className="placeholder-image">No Image Available</div>
-        )}
+        )} */}
         <div className="card-body">
           <h2 className="card-title">{collection.name}</h2>
         </div>

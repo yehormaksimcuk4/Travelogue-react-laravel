@@ -51,9 +51,9 @@ const SavedCollectionItem = ({ savedItem, setFullScreenImage }) => {
   return (
     <div key={savedItem.id} className="col">
       <div className="card shadow-sm">
-        <img src={`${apiUrl}${savedItem.image_path}`} className="card-img-top p-5" alt={`Saved Item`} onClick={openFullScreen} />
+        <img src={`${apiUrl}${savedItem.image_path}`} className="card-img-top p-2" alt={`Saved Item`} onClick={openFullScreen} />
         <div className="card-body">
-          <h2 className="card-title">Saved Item ID: {savedItem.id}</h2>
+          <h2 className="card-title">Saved Item no: {savedItem.id}</h2>
         </div>
       </div>
     </div>

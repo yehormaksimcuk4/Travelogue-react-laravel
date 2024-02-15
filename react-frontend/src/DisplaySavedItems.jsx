@@ -110,7 +110,7 @@ const SavedItem = ({ item, user }) => {
           <Link to={`/user/${item.author_id}`} className="text-danger">
             <p>Author: {author ? author.name : 'Unknown Author'}</p>
           </Link>
-          <img src={`${apiUrl}${item.image_path}`} className="card-img-top p-5" alt={`Photo`}  onClick={() => openFullScreen(`${apiUrl}${item.image_path}`)} />
+          <img src={`${apiUrl}${item.image_path}`} className="card-img-top p-2" alt={`Photo`}  onClick={() => openFullScreen(`${apiUrl}${item.image_path}`)} />
           <p>Created At: {item.created_at}</p>
         </div>
 

@@ -104,6 +104,7 @@ const Home = () => {
   const [selectedCollection, setSelectedCollection] = useState(null);
   const [newCollectionName, setNewCollectionName] = useState('');
   const [itemId, setItemId] = useState(null);
+  const [isItemSaved, setIsItemSaved] = useState(false);
 
   // Fetch itineraries
   const { loading: itinerariesLoading, error: itinerariesError, data: itinerariesData } = useQuery(GET_ITINERARIES);
@@ -216,6 +217,7 @@ const Home = () => {
   const handleSaveItemToCollectionConfirm = () => {
     if (selectedCollection) {
       saveItemToCollection(selectedCollection, itemId);  // Pass variables separately
+      setIsItemSaved(true);
     } else if (newCollectionName) {
       createNewCollection(newCollectionName, localStorage.getItem('user_id'));
     }
@@ -257,11 +259,11 @@ const Home = () => {
                       <p className="card-text">Created At: {item?.created_at}</p>
                       {item.__typename === 'Photo' && (
                         <button
-                          className={`btn ${savedItems.includes(item.id) ? 'btn-secondary' : 'btn-danger'}`}
+                        className={`btn ${isItemSaved ? 'btn-secondary' : 'btn-danger'}`}
                           onClick={() => handleSaveItemToCollection(selectedCollection, item.id)}
-                          disabled={savedItems.includes(item.id)}
+                          disabled={isItemSaved}
                         >
-                          {savedItems.includes(item.id) ? 'Saved' : 'Save This'}
+                            {isItemSaved ? 'Saved' : 'Save Item'}
                         </button>
                       )}
                     </div>
@@ -320,7 +322,7 @@ const Home = () => {
                 <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>
                   Close
                 </button>
-                <button type="button" className="btn btn-primary" onClick={handleSaveItemToCollectionConfirm}>
+                <button type="button" className="btn btn-danger" onClick={handleSaveItemToCollectionConfirm}>
                   Save Item
                 </button>
               </div>
