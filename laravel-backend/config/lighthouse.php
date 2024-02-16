@@ -193,6 +193,7 @@ return [
             'login' => \App\GraphQL\Mutations\Login::class,
             'createCollection' => \App\GraphQL\Mutations\CreateCollection::class,
             'addToCollection' => \App\GraphQL\Mutations\AddToCollection::class,
+            'deleteSavedItem' => \App\GraphQL\Mutations\DeleteSavedItem::class,
         ],
         // Add other resolver mappings as needed
     ],

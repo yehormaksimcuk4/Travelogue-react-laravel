@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useQuery, gql } from '@apollo/client';
+import { useQuery, gql, useMutation } from '@apollo/client';
 import { Link } from 'react-router-dom';
 import ImageFullScreen from './ImageFullScreen';
 
@@ -44,10 +44,34 @@ const GET_USER = gql`
   }
 `;
 
+const DELETE_SAVED_ITEM = gql`
+  mutation DeleteSavedItem($id: ID!) {
+    deletePost(id: $id) {
+      success
+      message
+    }
+  }
+`;
+
 const SavedList = () => {
   const [fullScreenImage, setFullScreenImage] = useState(null);
 
   const { loading, error, data } = useQuery(GET_MY_SAVED_ITEMS);
+
+  const [deleteSavedItemMutation] = useMutation(DELETE_SAVED_ITEM);
+
+  const handleDeleteItem = async (id) => {
+    try {
+      await deleteSavedItemMutation({
+        variables: { id },
+      });
+  
+      // Refetch user activities after deletion
+      refetch();
+    } catch (error) {
+      console.error('Error deleting item:', error.message);
+    }
+  };
 
   useEffect(() => {
     // Handle loading and error states if needed
@@ -132,7 +156,9 @@ const SavedItem = ({ item, user }) => {
           <div className="card-body">
             <h3>Photo</h3>
             <img src={`${apiUrl}${item.photo.image_path}`} alt={`Photo`} />
+           
           </div>
+
         )}
       </div>
       {fullScreenImage && <ImageFullScreen imageUrl={fullScreenImage} onClose={() => setFullScreenImage(null)} />}
