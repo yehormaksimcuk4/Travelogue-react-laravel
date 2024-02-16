@@ -113,7 +113,7 @@ const SavedCollectionItem = ({ savedItem, setFullScreenImage, handleDeleteItem }
         <img src={`${apiUrl}${savedItem.image_path}`} className="card-img-top p-2" alt={`Saved Item`} onClick={openFullScreen} />
         <div className="card-body">
           <h2 className="card-title">Saved Item no: {savedItem.id}</h2>
-          <button className="btn btn-danger" onClick={() => handleDeleteItem(savedItem.id)}>
+          <button className="btn btn-secondary float-end" onClick={() => handleDeleteItem(savedItem.id)}>
             Delete
           </button>
         </div>
