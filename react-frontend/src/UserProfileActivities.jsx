@@ -93,6 +93,7 @@ const UserProfileActivities = ({ userId }) => {
   const [newCollectionName, setNewCollectionName] = useState('');
   const [itemId, setItemId] = useState(null);
   const [isItemSaved, setIsItemSaved] = useState(false);
+  
 
   //Fetch user data
   const { loading: userLoading, error: userError, data: userData } = useQuery(ME_QUERY);
@@ -178,9 +179,10 @@ const UserProfileActivities = ({ userId }) => {
   const handleSaveItemToCollectionConfirm = () => {
     if (selectedCollection) {
       saveItemToCollection(selectedCollection, itemId);  // Pass variables separately
-      setIsItemSaved(true);
+      setSavedItems((prevSavedItems) => ({ ...prevSavedItems, [itemId]: true }));
     } else if (newCollectionName) {
       createNewCollection(newCollectionName, localStorage.getItem('user_id'));
+      setSavedItems((prevSavedItems) => ({ ...prevSavedItems, [itemId]: true }));
     }
   
     handleCloseModal();
@@ -240,13 +242,13 @@ const UserProfileActivities = ({ userId }) => {
                 </div>
                 {/* {item.__typename === 'Photo' && ( */}
                 <button
-                    className={`btn ${isItemSaved ? 'btn-secondary' : 'btn-danger'}`}
+                    className={`btn ${savedItems[photo.id] ? 'btn-secondary' : 'btn-danger'}`}
                   onClick={() => handleSaveItemToCollection(selectedCollection, photo.id)}
                   // onClick={() => handleSaveItem(photo.id)}
                   // disabled={savedItems.includes(photo.id)}
-                  disabled={isItemSaved}
+                  disabled={savedItems[photo.id]}
                 >
-                   {isItemSaved ? 'Saved' : 'Save Item'}
+               {savedItems[photo.id] ? 'Saved' : 'Save This'}
                 </button>
               
               </div>
