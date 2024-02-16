@@ -105,6 +105,7 @@ const Home = () => {
   const [newCollectionName, setNewCollectionName] = useState('');
   const [itemId, setItemId] = useState(null);
   const [isItemSaved, setIsItemSaved] = useState(false);
+  
 
   // Fetch itineraries
   const { loading: itinerariesLoading, error: itinerariesError, data: itinerariesData } = useQuery(GET_ITINERARIES);
@@ -217,9 +218,10 @@ const Home = () => {
   const handleSaveItemToCollectionConfirm = () => {
     if (selectedCollection) {
       saveItemToCollection(selectedCollection, itemId);  // Pass variables separately
-      setIsItemSaved(true);
+      setSavedItems((prevSavedItems) => ({ ...prevSavedItems, [itemId]: true }));
     } else if (newCollectionName) {
       createNewCollection(newCollectionName, localStorage.getItem('user_id'));
+      setSavedItems((prevSavedItems) => ({ ...prevSavedItems, [itemId]: true }));
     }
   
     handleCloseModal();
@@ -259,11 +261,11 @@ const Home = () => {
                       <p className="card-text">Created At: {item?.created_at}</p>
                       {item.__typename === 'Photo' && (
                         <button
-                        className={`btn ${isItemSaved ? 'btn-secondary' : 'btn-danger'}`}
+                        className={`btn ${savedItems[item.id] ? 'btn-secondary' : 'btn-danger'}`}
                           onClick={() => handleSaveItemToCollection(selectedCollection, item.id)}
-                          disabled={isItemSaved}
+                          disabled={savedItems[item.id]}
                         >
-                            {isItemSaved ? 'Saved' : 'Save Item'}
+                            {savedItems[item.id] ? 'Saved' : 'Save This'}
                         </button>
                       )}
                     </div>
