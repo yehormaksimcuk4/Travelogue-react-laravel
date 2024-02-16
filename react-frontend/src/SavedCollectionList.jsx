@@ -22,18 +22,15 @@ const DELETE_SAVED_ITEM = gql`
     }
   }
 `;
-// const handleDeleteItem = async (id) => {
-//   try {
-//     await deleteSavedItemMutation({
-//       variables: { id },
-//     });
 
-//     // Refetch user activities after deletion
-//     refetch();
-//   } catch (error) {
-//     console.error('Error deleting item:', error.message);
-//   }
-// };
+const DELETE_COLLECTION = gql`
+  mutation DeleteCollection($id: ID!) {
+    deleteCollection(id: $id) {
+      success
+      message
+    }
+  }
+`;
 
 const SavedCollectionList = () => {
   const { collectionId } = useParams();
@@ -43,44 +40,65 @@ const SavedCollectionList = () => {
     variables: { collectionId },
   });
 
-  
-  
+  const [deleteCollectionMutation] = useMutation(DELETE_COLLECTION);
   const [deleteSavedItemMutation] = useMutation(DELETE_SAVED_ITEM, {
     refetchQueries: [{ query: GET_SAVED_COLLECTION_ITEMS, variables: { collectionId } }],
   });
 
-  const handleDeleteItem = async (id) => {
+  const handleDeleteCollection = async () => {
+    try {
+      const { data } = await deleteCollectionMutation({
+        variables: { id: collectionId },
+      });
+      
+      // Refetch user activities after deletion
+      window.location.href = "/usercollections";
+    } catch (error) {
+      console.error('Error deleting collection:', error.message);
+    }
+  };
+
+  const handleDeleteItem = async (itemId) => {
     try {
       await deleteSavedItemMutation({
-        variables: { id },
+        variables: { id: itemId },
       });
-  
+
       // Refetch user activities after deletion
       // refetch();
     } catch (error) {
       console.error('Error deleting item:', error.message);
     }
   };
-  
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-  
+
   const savedItems = data?.savedCollectionItems || [];
 
-  
   return (
+    <>
+        <button className="btn btn-secondary position-absolute top-10 end-0 m-2" onClick={handleDeleteCollection}>
+          Delete This Collection
+        </button>
     <div className="container">
       <div className="album py-5 bg-light mt-3">
         <div className="container">
           <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             {savedItems.map((savedItem) => (
-              <SavedCollectionItem key={savedItem.id} savedItem={savedItem} setFullScreenImage={setFullScreenImage}  handleDeleteItem={handleDeleteItem} />
+              <SavedCollectionItem
+              key={savedItem.id}
+              savedItem={savedItem}
+              setFullScreenImage={setFullScreenImage}
+              handleDeleteItem={handleDeleteItem}
+              />
               ))}
           </div>
         </div>
       </div>
       {fullScreenImage && <ImageFullScreen imageUrl={fullScreenImage} onClose={() => setFullScreenImage(null)} />}
     </div>
+              </>
   );
 };
 
@@ -95,7 +113,9 @@ const SavedCollectionItem = ({ savedItem, setFullScreenImage, handleDeleteItem }
         <img src={`${apiUrl}${savedItem.image_path}`} className="card-img-top p-2" alt={`Saved Item`} onClick={openFullScreen} />
         <div className="card-body">
           <h2 className="card-title">Saved Item no: {savedItem.id}</h2>
-        <button className="btn btn-danger" onClick={() => handleDeleteItem(savedItem.id)}>Delete</button>
+          <button className="btn btn-danger" onClick={() => handleDeleteItem(savedItem.id)}>
+            Delete
+          </button>
         </div>
       </div>
     </div>

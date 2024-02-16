@@ -243,7 +243,7 @@ const Home = () => {
                     {item.__typename === 'Photo' && item.image_path && (
                       <img
                         src={`${apiUrl}${item.image_path}`}
-                        className="card-img-top p-5"
+                        className="card-img-top p-2"
                         alt={`Thumbnail for ${item.__typename}`}
                         onClick={() => openFullScreen(`${apiUrl}${item.image_path}`)}
                       />

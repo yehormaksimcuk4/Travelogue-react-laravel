@@ -107,6 +107,7 @@ extend type Mutation {
        createCollection(name: String! user_id: ID!): Collection @create
             addToCollection(photoId: ID!, collectionId: ID!): SavedItem!
               deleteSavedItem(id: ID!): DeleteResult!
+              deleteCollection(id: ID!): DeleteResult!
 }
 
 type AuthPayload {
