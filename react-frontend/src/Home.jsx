@@ -105,7 +105,7 @@ const Home = () => {
   const [newCollectionName, setNewCollectionName] = useState('');
   const [itemId, setItemId] = useState(null);
   const [isItemSaved, setIsItemSaved] = useState(false);
-  
+
 
   // Fetch itineraries
   const { loading: itinerariesLoading, error: itinerariesError, data: itinerariesData } = useQuery(GET_ITINERARIES);
@@ -119,12 +119,12 @@ const Home = () => {
   //Fetch user data
   const { loading: userLoading, error: userError, data: userData } = useQuery(ME_QUERY);
 
-   // Fetch user's collections
-   const { loading: collectionsLoading, error: collectionsError, data: collectionsData } = useQuery(GET_MY_COLLECTIONS);
+  // Fetch user's collections
+  const { loading: collectionsLoading, error: collectionsError, data: collectionsData } = useQuery(GET_MY_COLLECTIONS);
 
 
 
-    // Add loading and error handling here
+  // Add loading and error handling here
   // if (itinerariesLoading || postsLoading || photosLoading || userLoading || collectionsLoading) {
   //   return <p>Loading...</p>;
   // }
@@ -157,10 +157,10 @@ const Home = () => {
       const { data } = await saveItemToCollectionMutation({
         variables: { collectionId, itemId },
       });
-  
+
       // Handle the response after saving the item to the collection
       console.log('Saved item to collection:', data.addToCollection);
-      
+
       // Assuming your GraphQL response has an 'addToCollection' field
       if (data.addToCollection) {
         // Handle the case where the item is successfully added to the collection
@@ -172,7 +172,7 @@ const Home = () => {
       console.error('Error saving item to collection:', error.message);
     }
   };
-  
+
   const userId = localStorage.getItem('user_id');
 
   const createNewCollection = async (name, user_id) => {
@@ -180,10 +180,10 @@ const Home = () => {
       const { data } = await createNewCollectionMutation({
         variables: { name, user_id },
       });
-  
+
       // Handle the response after creating a new collection
       console.log('Created new collection:', data.createCollection);
-  
+
       // If the new collection was created successfully, save the item to it
       if (data.createCollection) {
         saveItemToCollection(data.createCollection.id, itemId);
@@ -223,7 +223,9 @@ const Home = () => {
       createNewCollection(newCollectionName, localStorage.getItem('user_id'));
       setSavedItems((prevSavedItems) => ({ ...prevSavedItems, [itemId]: true }));
     }
-  
+    setSelectedCollection(null);
+    setNewCollectionName('');
+    setItemId(null);
     handleCloseModal();
   };
 
@@ -261,11 +263,11 @@ const Home = () => {
                       <p className="card-text">Created At: {item?.created_at}</p>
                       {item.__typename === 'Photo' && (
                         <button
-                        className={`btn ${savedItems[item.id] ? 'btn-secondary' : 'btn-danger'}`}
+                          className={`btn ${savedItems[item.id] ? 'btn-secondary' : 'btn-danger'}`}
                           onClick={() => handleSaveItemToCollection(selectedCollection, item.id)}
                           disabled={savedItems[item.id]}
                         >
-                            {savedItems[item.id] ? 'Saved' : 'Save This'}
+                          {savedItems[item.id] ? 'Saved' : 'Save This'}
                         </button>
                       )}
                     </div>
@@ -298,14 +300,14 @@ const Home = () => {
                     onChange={(e) => setSelectedCollection(e.target.value)}
                   >
                     <option value="" selected disabled>
-                    Select Collection
-                  </option>
-                  {/* Display user's collections in the dropdown */}
-                  {collectionsData?.me?.collections.map((collection) => (
-                    <option key={collection.id} value={collection.id}>
-                      {collection.name}
+                      Select Collection
                     </option>
-                  ))}
+                    {/* Display user's collections in the dropdown */}
+                    {collectionsData?.me?.collections.map((collection) => (
+                      <option key={collection.id} value={collection.id}>
+                        {collection.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className="form-group">
