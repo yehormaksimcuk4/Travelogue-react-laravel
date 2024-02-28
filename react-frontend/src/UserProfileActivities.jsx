@@ -165,7 +165,7 @@ const UserProfileActivities = ({ userId }) => {
 
   const handleSaveItemToCollection = (collectionId, itemId) => {
     setItemId(itemId);
-    setSelectedCollection(collectionId);
+    setSelectedCollection(collectionId || '');
     setShowModal(true);
   };
 
@@ -174,15 +174,18 @@ const UserProfileActivities = ({ userId }) => {
     setSelectedCollection(null);
     setNewCollectionName('');
     setItemId(null);
+    setIsItemSaved(false);
   };
 
   const handleSaveItemToCollectionConfirm = () => {
     if (selectedCollection) {
       saveItemToCollection(selectedCollection, itemId);  // Pass variables separately
       setSavedItems((prevSavedItems) => ({ ...prevSavedItems, [itemId]: true }));
+      setSelectedCollection('');
     } else if (newCollectionName) {
       createNewCollection(newCollectionName, localStorage.getItem('user_id'));
       setSavedItems((prevSavedItems) => ({ ...prevSavedItems, [itemId]: true }));
+      setSelectedCollection('');
     }
   
     handleCloseModal();
@@ -291,7 +294,7 @@ const UserProfileActivities = ({ userId }) => {
               <select
                 className="form-control"
                 id="collectionSelect"
-                value={selectedCollection}
+                value={selectedCollection || ''} 
                 onChange={(e) => setSelectedCollection(e.target.value)}
               >
                 <option value="" selected disabled>
