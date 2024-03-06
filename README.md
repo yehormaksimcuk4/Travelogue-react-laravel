@@ -1,6 +1,6 @@
 # Travelogue
 
-Travelogue is an exciting travel platform currently still in development. This project is meticulously crafted using a robust technology stack to ensure a seamless and immersive user experience. The key technologies employed in this project include MySQL, Laravel, React, and Bootstrap.
+Travelogue is an travel platform currently still in development. This project is crafted using a fine technology stack to ensure a seamless and good user experience. The key technologies employed in this project include MySQL, Laravel, React and bootstrap. it uses Laravel Sanctum for user authentication token and Graph QL for both the Laravel Lighthouse Server and React's Apollo client for data coming from the server.
 
 ![Example Screenshot](travelogue-login-1.jpg)
 
