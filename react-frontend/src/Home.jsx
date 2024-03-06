@@ -179,6 +179,7 @@ const Home = () => {
     try {
       const { data } = await createNewCollectionMutation({
         variables: { name, user_id },
+        refetchQueries: [{ query: GET_MY_COLLECTIONS }],
       });
 
       // Handle the response after creating a new collection
