@@ -23,4 +23,8 @@ public function collection()
 {
     return $this->belongsTo(Collection::class);
 }
+public function likes()
+{
+    return $this->hasMany(Like::class, 'item_id');
+}
 }

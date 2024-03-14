@@ -195,6 +195,7 @@ return [
             'addToCollection' => \App\GraphQL\Mutations\AddToCollection::class,
             'deleteSavedItem' => \App\GraphQL\Mutations\DeleteSavedItem::class,
             'deleteCollection' => App\GraphQL\Mutations\DeleteCollection::class,
+            'likePhoto' => 'App\\GraphQL\\Mutations\\LikePhoto@likePhoto',
         ],
         // Add other resolver mappings as needed
     ],

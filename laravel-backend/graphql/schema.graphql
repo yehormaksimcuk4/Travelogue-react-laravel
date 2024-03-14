@@ -16,6 +16,7 @@ type Query {
       collectionss(user_id: ID!): [Collection!]! @all
         collections(id: ID!): Collection @find
         savedCollectionItems(id: ID!): [SavedItem!]! @field(resolver: "App\\GraphQL\\Queries\\SavedCollectionItems@resolve")
+          photosWithLikes: [Photo!]!
 }
 
 type User {
@@ -53,6 +54,7 @@ type Photo {
     image_path: String!
     user: User! @belongsTo
     created_at: DateTime!
+    likes: Int
 }
 
 type Itinerary {
@@ -89,6 +91,10 @@ type Collection {
     savedItems: [SavedItem!]! @hasMany
 }
 
+type LikeResponse {
+    likes: Int!
+}
+
 
 extend type Mutation {
     createUser(name: String!, email: String!, password: String!): User @create
@@ -102,12 +108,13 @@ extend type Mutation {
        deletePhoto(id: ID!): DeleteResult!
          deleteItinerary(id: ID!): DeleteResult!
         updatePost(id: ID!, content: String!): Post!
-  updateItinerary(id: ID!, description: String!): Itinerary!
-   saveItem(itemId: ID!): SavedItem!
-       createCollection(name: String! user_id: ID!): Collection @create
+     updateItinerary(id: ID!, description: String!): Itinerary!
+     saveItem(itemId: ID!): SavedItem!
+     createCollection(name: String! user_id: ID!): Collection @create
             addToCollection(photoId: ID!, collectionId: ID!): SavedItem!
               deleteSavedItem(id: ID!): DeleteResult!
               deleteCollection(id: ID!): DeleteResult!
+               likePhoto(photoId: ID!, photoId: ID!): LikeResponse! @field(resolver: "App\\GraphQL\\Mutations\\LikePhoto")
 }
 
 type AuthPayload {

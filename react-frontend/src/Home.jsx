@@ -39,6 +39,7 @@ const GET_PHOTOS = gql`
     photo {
       id
       image_path
+      likes
       user {
         id
         name
@@ -48,17 +49,16 @@ const GET_PHOTOS = gql`
   }
 `;
 
-// export const SAVE_ITEM_MUTATION = gql`
-//   mutation SaveItem($itemId: ID!) {
-//     saveItem(itemId: $itemId) {
-//       id
-//       author_id
-//       user_id
-//       image_path
-//       created_at
-//     }
-//   }
-// `;
+const GET_PHOTOS_WITH_LIKES = gql`
+  query {
+    photosWithLikes {
+      id
+      image_path
+      likes
+    }
+  }
+`;
+
 
 export const SAVE_ITEM_TO_COLLECTION_MUTATION = gql`
   mutation addToCollection($collectionId: ID!, $itemId: ID!) {
@@ -97,6 +97,14 @@ export const GET_MY_COLLECTIONS = gql`
 query GetMyCollections { me { id collections { id name user { id name } savedItems { id image_path } } } }
 `;
 
+const LIKE_PHOTO_MUTATION = gql`
+  mutation LikePhoto($photoId: ID!) {
+    likePhoto(photoId: $photoId) {
+      likes
+    }
+  }
+`;
+
 const Home = () => {
   const [fullScreenImage, setFullScreenImage] = useState(null);
   const [savedItems, setSavedItems] = useState([]);
@@ -105,6 +113,8 @@ const Home = () => {
   const [newCollectionName, setNewCollectionName] = useState('');
   const [itemId, setItemId] = useState(null);
   const [isItemSaved, setIsItemSaved] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [likedItems, setLikedItems] = useState({});
 
 
   // Fetch itineraries
@@ -122,21 +132,12 @@ const Home = () => {
   // Fetch user's collections
   const { loading: collectionsLoading, error: collectionsError, data: collectionsData } = useQuery(GET_MY_COLLECTIONS);
 
+  const { loading, error, data } = useQuery(GET_PHOTOS_WITH_LIKES);
 
 
-  // Add loading and error handling here
-  // if (itinerariesLoading || postsLoading || photosLoading || userLoading || collectionsLoading) {
-  //   return <p>Loading...</p>;
-  // }
-
-  // if (itinerariesError || postsError || photosError || userError || collectionsError) {
-  //   console.error(itinerariesError, postsError, photosError, userError, collectionsError);
-  //   return <p>Error fetching data. Please check the console for more details.</p>;
-  // }
-
-  // const [saveItem] = useMutation(SAVE_ITEM_MUTATION);
   const [saveItemToCollectionMutation] = useMutation(SAVE_ITEM_TO_COLLECTION_MUTATION);
   const [createNewCollectionMutation] = useMutation(CREATE_NEW_COLLECTION_MUTATION);
+  const [likePhoto] = useMutation(LIKE_PHOTO_MUTATION);
 
   // Combine data from itineraries, posts, and photos
   const combinedData = [
@@ -237,6 +238,19 @@ const Home = () => {
     setFullScreenImage(imageUrl);
   };
 
+  const handleLike = async (itemId, userId) => {
+    try {
+      await likePhoto({ variables: { photoId: itemId, userId: userId } });
+      setLikedItems(prevLikedItems => ({
+        ...prevLikedItems,
+        [itemId]: true
+      }));
+    } catch (error) {
+      console.error('Error liking photo:', error);
+    }
+  };
+
+
   return (
     <>
       <div className="container">
@@ -265,15 +279,30 @@ const Home = () => {
                       {item.__typename === 'Post' && <p className="card-text">{item?.content}</p>}
                       {item.__typename === 'Itinerary' && <p className="card-text">{item?.description}</p>}
                       <p className="card-text">Created At: {item?.created_at}</p>
-                      {item.__typename === 'Photo' && (
-                        <button
-                          className={`btn ${savedItems[item.id] ? 'btn-secondary' : 'btn-danger'}`}
-                          onClick={() => handleSaveItemToCollection(selectedCollection, item.id)}
-                          disabled={savedItems[item.id]}
-                        >
-                          {savedItems[item.id] ? 'Saved' : 'Save This'}
-                        </button>
-                      )}
+                      <div className='mb-3'>
+                        {/* Display the number of likes */}
+                        Likes: {item.likes}
+                      </div>
+                      <div className='d-flex gap-4'>
+
+                        {item.__typename === 'Photo' && (
+                          <button
+                            className={`btn ${savedItems[item.id] ? 'btn-secondary' : 'btn-danger'}`}
+                            onClick={() => handleSaveItemToCollection(selectedCollection, item.id)}
+                            disabled={savedItems[item.id]}
+                          >
+                            {savedItems[item.id] ? 'Saved' : 'Save This'}
+                          </button>
+                        )}
+                        <>
+                          <button
+                            className={`btn ${likedItems[item.id] ? 'btn-secondary' : 'btn-danger'}`}
+                            onClick={() => handleLike(item.id, userId)}
+                          >
+                            {likedItems[item.id] ? 'Liked' : 'Like'}
+                          </button>
+                        </>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -300,7 +329,7 @@ const Home = () => {
                   <select
                     className="form-control"
                     id="collectionSelect"
-                    value={selectedCollection || ''} 
+                    value={selectedCollection || ''}
                     onChange={(e) => setSelectedCollection(e.target.value)}
                   >
                     <option value="" selected disabled>

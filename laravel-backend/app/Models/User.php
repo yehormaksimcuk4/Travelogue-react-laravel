@@ -72,4 +72,8 @@ public function collections()
 {
     return $this->hasMany(Collection::class);
 }
+public function likes()
+{
+    return $this->hasMany(Like::class);
+}
 }
