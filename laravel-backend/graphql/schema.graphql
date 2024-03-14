@@ -17,6 +17,8 @@ type Query {
         collections(id: ID!): Collection @find
         savedCollectionItems(id: ID!): [SavedItem!]! @field(resolver: "App\\GraphQL\\Queries\\SavedCollectionItems@resolve")
           photosWithLikes: [Photo!]!
+          itinerariesWithLikes: [Itinerary!]!
+          postsWithLikes: [Post!]!
 }
 
 type User {
@@ -47,6 +49,7 @@ type Post {
     content: String!
     user: User! @belongsTo
     created_at: DateTime!
+     likes: Int
 }
 
 type Photo {
@@ -62,6 +65,7 @@ type Itinerary {
     description: String!
     user: User! @belongsTo
     created_at: DateTime!
+     likes: Int
 }
 
 type DeleteResult {
@@ -114,7 +118,9 @@ extend type Mutation {
             addToCollection(photoId: ID!, collectionId: ID!): SavedItem!
               deleteSavedItem(id: ID!): DeleteResult!
               deleteCollection(id: ID!): DeleteResult!
-               likePhoto(photoId: ID!, photoId: ID!): LikeResponse! @field(resolver: "App\\GraphQL\\Mutations\\LikePhoto")
+              likePhoto(photoId: ID!): LikeResponse! @field(resolver: "App\\GraphQL\\Mutations\\LikePhoto")
+              likePost(postId: ID!): LikeResponse!
+              likeItinerary(itineraryId: ID!): LikeResponse!
 }
 
 type AuthPayload {

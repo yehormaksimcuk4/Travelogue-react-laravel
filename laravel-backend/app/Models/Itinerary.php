@@ -9,7 +9,7 @@ class Itinerary extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'description'];
+    protected $fillable = ['user_id', 'description', 'likes'];
     public function user()
 {
     return $this->belongsTo(User::class);
@@ -17,5 +17,9 @@ class Itinerary extends Model
 public function itinerary($savedItem)
 {
     return $savedItem->itinerary;
+}
+public function likes()
+{
+    return $this->hasMany(Like::class, 'itinerary_id');
 }
 }

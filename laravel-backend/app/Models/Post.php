@@ -18,4 +18,8 @@ public function post($savedItem)
 {
     return $savedItem->post;
 }
+public function likes()
+{
+    return $this->hasMany(Like::class, 'post_id');
+}
 }

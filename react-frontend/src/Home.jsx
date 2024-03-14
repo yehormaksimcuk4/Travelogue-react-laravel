@@ -11,6 +11,7 @@ const GET_ITINERARIES = gql`
     itinerary {
       id
       description
+      likes 
       user {
         id
         name
@@ -25,6 +26,7 @@ const GET_POSTS = gql`
     post {
       id
       content
+      likes 
       user {
         id
         name
@@ -54,6 +56,26 @@ const GET_PHOTOS_WITH_LIKES = gql`
     photosWithLikes {
       id
       image_path
+      likes
+    }
+  }
+`;
+
+const GET_ITINERARIES_WITH_LIKES = gql`
+  query {
+    itinerariesWithLikes {
+      id
+      description
+      likes  
+    }
+  }
+`;
+
+const GET_POSTS_WITH_LIKES = gql`
+  query {
+    postsWithLikes {
+      id
+      content
       likes
     }
   }
@@ -105,6 +127,22 @@ const LIKE_PHOTO_MUTATION = gql`
   }
 `;
 
+const LIKE_POST_MUTATION = gql`
+  mutation LikePost($postId: ID!) {
+    likePost(postId: $postId) {
+      likes
+    }
+  }
+`;
+
+const LIKE_ITINERARY_MUTATION = gql`
+  mutation LikeItinerary($itineraryId: ID!) {
+    likeItinerary(itineraryId: $itineraryId) {
+      likes
+    }
+  }
+`;
+
 const Home = () => {
   const [fullScreenImage, setFullScreenImage] = useState(null);
   const [savedItems, setSavedItems] = useState([]);
@@ -134,10 +172,23 @@ const Home = () => {
 
   const { loading, error, data } = useQuery(GET_PHOTOS_WITH_LIKES);
 
+  
+
 
   const [saveItemToCollectionMutation] = useMutation(SAVE_ITEM_TO_COLLECTION_MUTATION);
   const [createNewCollectionMutation] = useMutation(CREATE_NEW_COLLECTION_MUTATION);
-  const [likePhoto] = useMutation(LIKE_PHOTO_MUTATION);
+  const [likePhoto] = useMutation(LIKE_PHOTO_MUTATION, {
+    // Refetch photos after liking
+    refetchQueries: [{ query: GET_PHOTOS_WITH_LIKES }],
+  });
+  const [likePostMutation] = useMutation(LIKE_POST_MUTATION, {
+    // Refetch photos after liking
+    refetchQueries: [{ query: GET_POSTS }],
+  });
+  const [likeItineraryMutation] = useMutation(LIKE_ITINERARY_MUTATION, {
+    // Refetch photos after liking
+    refetchQueries: [{ query: GET_ITINERARIES }],
+  });
 
   // Combine data from itineraries, posts, and photos
   const combinedData = [
@@ -195,15 +246,6 @@ const Home = () => {
     }
   };
 
-  // const handleSaveItem = (itemId) => {
-  //   saveItem({
-  //     variables: { itemId },
-  //     context: { headers: { Authorization: `Bearer ${Token}` } },
-  //   });
-
-  //   setSavedItems((prevItems) => [...prevItems, itemId]);
-  // };
-
   const handleSaveItemToCollection = (collectionId, itemId) => {
     setItemId(itemId);
     setSelectedCollection(collectionId || '');
@@ -250,6 +292,31 @@ const Home = () => {
     }
   };
 
+  const handleLikePost = async (postId, userId) => {
+    try {
+      await likePostMutation({ variables: { postId: postId, userId: userId } });
+      setLikedItems(prevLikedItems => ({
+        ...prevLikedItems,
+        [postId]: true
+      }));
+    } catch (error) {
+      console.error('Error liking post:', error);
+    }
+  };
+
+  const handleLikeItinerary = async (itineraryId, userId) => {
+    try {
+      await likeItineraryMutation({ variables: { itineraryId : itineraryId, userId: userId } });
+      setLikedItems(prevLikedItems => ({
+        ...prevLikedItems,
+        [itineraryId]: true
+      }));
+    } catch (error) {
+      console.error('Error liking itinerary:', error);
+    }
+  };
+
+
 
   return (
     <>
@@ -268,6 +335,7 @@ const Home = () => {
                         onClick={() => openFullScreen(`${apiUrl}${item.image_path}`)}
                       />
                     )}
+
                     <div className="card-body">
                       <h2 className="card-title">{item.__typename}</h2>
                       <p className="card-text m-0">
@@ -277,12 +345,19 @@ const Home = () => {
                         </Link>
                       </p>
                       {item.__typename === 'Post' && <p className="card-text">{item?.content}</p>}
+
+
+
                       {item.__typename === 'Itinerary' && <p className="card-text">{item?.description}</p>}
-                      <p className="card-text">Created At: {item?.created_at}</p>
+
+
+
+                      <p className="card-text">Created At: {item?.created_at}
                       <div className='mb-3'>
                         {/* Display the number of likes */}
                         Likes: {item.likes}
                       </div>
+                      </p>
                       <div className='d-flex gap-4'>
 
                         {item.__typename === 'Photo' && (
@@ -295,12 +370,41 @@ const Home = () => {
                           </button>
                         )}
                         <>
-                          <button
+                          {/* Render Like button for Photos */}
+                          {item.__typename === 'Photo' && (
+                            <button
+                              className={`btn ${likedItems[item.id] ? 'btn-secondary' : 'btn-danger'}`}
+                              onClick={() => handleLike(item.id, userId)}
+                            >
+                              {likedItems[item.id] ? 'Liked' : 'Like'}
+                            </button>
+                          )}
+
+                          {/* Render Like button for Posts */}
+                          {item.__typename === 'Post' && (
+                            <button
+                              className={`btn ${likedItems[item.id] ? 'btn-secondary' : 'btn-danger'}`}
+                              onClick={() => handleLikePost(item.id)}
+                            >
+                              {likedItems[item.id] ? 'Liked' : 'Like'}
+                            </button>
+                          )}
+
+                          {/* Render Like button for Itineraries */}
+                          {item.__typename === 'Itinerary' && (
+                            <button
+                              className={`btn ${likedItems[item.id] ? 'btn-secondary' : 'btn-danger'}`}
+                              onClick={() => handleLikeItinerary(item.id)}
+                            >
+                              {likedItems[item.id] ? 'Liked' : 'Like'}
+                            </button>
+                          )}
+                          {/* <button
                             className={`btn ${likedItems[item.id] ? 'btn-secondary' : 'btn-danger'}`}
                             onClick={() => handleLike(item.id, userId)}
                           >
                             {likedItems[item.id] ? 'Liked' : 'Like'}
-                          </button>
+                          </button> */}
                         </>
                       </div>
                     </div>
