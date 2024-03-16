@@ -13,11 +13,12 @@
         {
             Schema::create('photos', function (Blueprint $table) {
                 $table->id();
+                // $table->foreignId('user_id')->constrained();
                 $table->string('image_path');
                 $table->integer('likes')->default(0);
                 $table->timestamps();
 
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             });
         }
 

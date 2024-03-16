@@ -153,6 +153,9 @@ const Home = () => {
   const [isItemSaved, setIsItemSaved] = useState(false);
   const [liked, setLiked] = useState(false);
   const [likedItems, setLikedItems] = useState({});
+  const [likedPhotos, setLikedPhotos] = useState({});
+  const [likedPosts, setLikedPosts] = useState({});
+  const [likedItineraries, setLikedItineraries] = useState({});
 
 
   // Fetch itineraries
@@ -172,7 +175,7 @@ const Home = () => {
 
   const { loading, error, data } = useQuery(GET_PHOTOS_WITH_LIKES);
 
-  
+
 
 
   const [saveItemToCollectionMutation] = useMutation(SAVE_ITEM_TO_COLLECTION_MUTATION);
@@ -280,12 +283,12 @@ const Home = () => {
     setFullScreenImage(imageUrl);
   };
 
-  const handleLike = async (itemId, userId) => {
+  const handleLikePhoto = async (photoId, userId) => {
     try {
-      await likePhoto({ variables: { photoId: itemId, userId: userId } });
-      setLikedItems(prevLikedItems => ({
-        ...prevLikedItems,
-        [itemId]: true
+      await likePhoto({ variables: { photoId: photoId, userId: userId } });
+      setLikedPhotos(prevLikedPhotos => ({
+        ...prevLikedPhotos,
+        [photoId]: true
       }));
     } catch (error) {
       console.error('Error liking photo:', error);
@@ -295,8 +298,8 @@ const Home = () => {
   const handleLikePost = async (postId, userId) => {
     try {
       await likePostMutation({ variables: { postId: postId, userId: userId } });
-      setLikedItems(prevLikedItems => ({
-        ...prevLikedItems,
+      setLikedPosts(prevLikedPosts => ({
+        ...prevLikedPosts,
         [postId]: true
       }));
     } catch (error) {
@@ -306,16 +309,15 @@ const Home = () => {
 
   const handleLikeItinerary = async (itineraryId, userId) => {
     try {
-      await likeItineraryMutation({ variables: { itineraryId : itineraryId, userId: userId } });
-      setLikedItems(prevLikedItems => ({
-        ...prevLikedItems,
+      await likeItineraryMutation({ variables: { itineraryId: itineraryId, userId: userId } });
+      setLikedItineraries(prevLikedItineraries => ({
+        ...prevLikedItineraries,
         [itineraryId]: true
       }));
     } catch (error) {
       console.error('Error liking itinerary:', error);
     }
   };
-
 
 
   return (
@@ -353,10 +355,10 @@ const Home = () => {
 
 
                       <p className="card-text">Created At: {item?.created_at}
-                      <div className='mb-3'>
-                        {/* Display the number of likes */}
-                        Likes: {item.likes}
-                      </div>
+                        <div className='mb-3'>
+                          {/* Display the number of likes */}
+                          Likes: {item.likes}
+                        </div>
                       </p>
                       <div className='d-flex gap-4'>
 
@@ -373,30 +375,28 @@ const Home = () => {
                           {/* Render Like button for Photos */}
                           {item.__typename === 'Photo' && (
                             <button
-                              className={`btn ${likedItems[item.id] ? 'btn-secondary' : 'btn-danger'}`}
-                              onClick={() => handleLike(item.id, userId)}
+                              className={`btn ${likedPhotos[item.id] ? 'btn-secondary' : 'btn-danger'}`}
+                              onClick={() => handleLikePhoto(item.id, userId)}
                             >
-                              {likedItems[item.id] ? 'Liked' : 'Like'}
+                              {likedPhotos[item.id] ? 'Liked' : 'Like'}
                             </button>
                           )}
 
-                          {/* Render Like button for Posts */}
                           {item.__typename === 'Post' && (
                             <button
-                              className={`btn ${likedItems[item.id] ? 'btn-secondary' : 'btn-danger'}`}
-                              onClick={() => handleLikePost(item.id)}
+                              className={`btn ${likedPosts[item.id] ? 'btn-secondary' : 'btn-danger'}`}
+                              onClick={() => handleLikePost(item.id, userId)}
                             >
-                              {likedItems[item.id] ? 'Liked' : 'Like'}
+                              {likedPosts[item.id] ? 'Liked' : 'Like'}
                             </button>
                           )}
 
-                          {/* Render Like button for Itineraries */}
                           {item.__typename === 'Itinerary' && (
                             <button
-                              className={`btn ${likedItems[item.id] ? 'btn-secondary' : 'btn-danger'}`}
-                              onClick={() => handleLikeItinerary(item.id)}
+                              className={`btn ${likedItineraries[item.id] ? 'btn-secondary' : 'btn-danger'}`}
+                              onClick={() => handleLikeItinerary(item.id, userId)}
                             >
-                              {likedItems[item.id] ? 'Liked' : 'Like'}
+                              {likedItineraries[item.id] ? 'Liked' : 'Like'}
                             </button>
                           )}
                           {/* <button
